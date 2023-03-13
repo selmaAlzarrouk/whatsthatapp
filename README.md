@@ -1,0 +1,2 @@
+# whatsthatapp
+ ⭐Whats That App is a messaging application that allows users the ability to communicate with friends, family, and colleagues in real-time. With Whats That App it allows  you to send text messages and photos, videos, and even cute emojis to other users. Its built entirely using the JavaScript Framework called React Native, thus giving you the user a powerful and user-friendly messaging app that provides a fast, secure, convenient and  a super cute way to stay in touch with the people who matter most to you !!!
