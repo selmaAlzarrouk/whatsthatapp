@@ -1,4 +1,5 @@
-import React from 'react';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text, View } from 'react-native';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
@@ -10,16 +11,16 @@ const App = () => {
       <SignIn />
     </View>
   );
-};
-
+};        
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d8bdb6',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-});
+  }
+})
+
 export default App;
 
 
