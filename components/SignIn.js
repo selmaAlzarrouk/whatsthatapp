@@ -1,39 +1,57 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image  } from 'react-native';
- //Here is my functional component called SignIn. 
- //It uses the useState hook to manage the state of  email and password inputs.
- //The  handleSignIn function is used to deal with  sign-in logic, such as calling an API to authenticate the user.
-const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import React, { Component, useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-  const handleSignIn = () => {
-    // handle sign-in logic here
-  };
-  return (
-    <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={require('../assets/WhatsthatAppLogo.png')}
-      />
-      <Text style={styles.title}>Sign In</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Sign In" onPress={handleSignIn} />
-    </View>
-  );
-};
+
+
+//Here is my functional component called SignIn. 
+//It uses the useState hook to manage the state of  email and password inputs.
+//The  handleSignIn function is used to deal with  sign-in logic, such as calling an API to authenticate the user.
+class SignIn extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      submitted: false,
+      error: ""
+
+    }
+  }
+  // handle sign-in logic here
+  render() {
+    return (
+      <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require('../assets/WhatsthatAppLogo.png')}
+        />
+        <Text style={styles.title}>Sign In</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+
+
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Need an account? Click here</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+    );
+  }
+}
+
 
 const styles = StyleSheet.create({
   container: {

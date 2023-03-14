@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
+class SignUp extends Component {
 
-const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+          // handle sign-up logic here
+    };
 
-  const handleSignUp = () => {
-    // handle sign-up logic here
+    return (
+      <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require('../assets/WhatsthatAppLogo.png')}
+        />
+        <Text style={styles.title}>Sign Up</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Button title="Sign Up" onPress={handleSignUp} />
+      </View>
+    );
   };
 
-  return (
-    <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={require('../assets/WhatsthatAppLogo.png')}
-      />
-      <Text style={styles.title}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-    </View>
-  );
-};
+}
+
 
 const styles = StyleSheet.create({
   container: {
