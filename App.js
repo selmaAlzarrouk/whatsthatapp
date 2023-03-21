@@ -13,23 +13,19 @@ const App = () => {
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name = "Home" component={SignIn} />
         <Stack.Screen name = "Register" component={SignUp} />
-      </Stack.Navigator>
+        </Stack.Navigator>
    
     </NavigationContainer>
   );
 };        
-//const styles = StyleSheet.create({
- // container: {
-  //  flex: 1,
-  //  backgroundColor: '#d8bdb6',
-   // alignItems: 'center',
-   // justifyContent: 'center',
- // }
-//s})
 
 export default App;
 
 
 
 
+
+// implement Navigation stack 
+//  implement Styling   - tailwind css 
+//  
 

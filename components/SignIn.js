@@ -1,7 +1,8 @@
 import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-
+var validator = require("email-validator");
+validator.validate("test@gmail.com"); //true
 
 //Here is my functional component called SignIn. 
 //It uses the useState hook to manage the state of  email and password inputs.
@@ -17,27 +18,38 @@ class SignIn extends Component {
 
     }
   }
+
+  //Email Handler - this will change the value of the email state
+  emailHandler = (newEmail) =>{
+    this.setState({
+      email: newEmail
+    })
+    console.log("email: " + this.state.email)
+  }
+
+  passwordHandler = (pass) =>{
+    this.setState({
+      password: pass
+    })
+    console.log("password: " + this.state.password)
+  }
   // handle sign-in logic here
   render() {
     return (
       <View style={styles.container}>
-        <Image
-          style={styles.logo}
-          source={require('../assets/WhatsthatAppLogo.png')}
-        />
         <Text style={styles.title}>Sign In</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
+          value={this.state.email}
+         onChangeText={this.emailHandler}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          value={this.state.password}
+          onChangeText={this.passwordHandler}
         />
 
 
@@ -47,9 +59,12 @@ class SignIn extends Component {
           </View>
         </TouchableOpacity>
       </View>
+      
+
+      
 
     );
-  }
+}
 }
 
 
