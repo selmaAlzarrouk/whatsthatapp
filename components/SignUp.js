@@ -22,7 +22,6 @@ class SignUp extends Component {
     const REGEX_PASS = new
       RegExp("^(?=.*?[A-Z])(?=.*?[a-z)(?=.*?[0-9])(?[#?!@$%^&*-]).{8,}$")
 
-<<<<<<< Updated upstream
     if (!(this.state.email &&
       this.state.password &&
       this.state.firstname &&
@@ -100,42 +99,6 @@ class SignUp extends Component {
     ); 
   };
 }
-=======
-  
-          // handle sign-up logic here
-
-     
-            render(){
-              return (
-
-              <View style={styles.container}>
-              <Image
-                style={styles.logo}
-                source={require('../assets/WhatsthatAppLogo.png')}
-              />
-              <Text style={styles.title}>Sign Up</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
-              <Button title="Sign Up" onPress={handleSignUp} />
-            </View>
-          );
-        }
-      
-    
-      }
-
->>>>>>> Stashed changes
 const styles = StyleSheet.create({
   container: {
     flex: 1,

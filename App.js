@@ -14,18 +14,9 @@ const App = () => {
         <Stack.Screen name = "Home" component={SignIn} />
         <Stack.Screen name = "Register" component={SignUp} />
         </Stack.Navigator>
-   
+
     </NavigationContainer>
   );
-};        
+};
 
 export default App;
-
-
-
-
-
-// implement Navigation stack 
-//  implement Styling   - tailwind css 
-//  
-
