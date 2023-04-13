@@ -4,9 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } fr
 var validator = require("email-validator");
 validator.validate("test@gmail.com"); //true
 
-//Here is my functional component called SignIn. 
-//It uses the useState hook to manage the state of  email and password inputs.
-//The  handleSignIn function is used to deal with  sign-in logic, such as calling an API to authenticate the user.
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +31,35 @@ class SignIn extends Component {
     })
     console.log("password: " + this.state.password)
   }
+
+
+  signInRequest = () =>{
+    const data = {
+        email:this.state.email,
+      password: this.state.password,
+      
+    };
+    fetch('http://localhost:3333/api/1.0.0/login',{
+      method: 'post',
+      headers:{
+        'content-type': 'application/json',
+       },
+       body: JSON.stringify(data),
+    })
+    //handling the response 
+    .then((response)=>{
+      if(response.status ==400){
+        this.setState({error: "Bad Request, Please try again follow the registation form thank you"});
+      }else if(response.status ==500){
+        this.setState({error: "Hmmm something went wrong here , server has failed!"});
+    }else{
+      console.log("Logged in woop woop!")
+       //REMINDER NOTE TO SELF :  this.props.navigation.navigate('contactPage'); i will need to make the navigation to go to the Contacts Page basically 
+    }
+}) 
+  
+  }
+
   // handle sign-in logic here
   render() {
     return (
@@ -51,8 +78,8 @@ class SignIn extends Component {
           value={this.state.password}
           onChangeText={this.passwordHandler}
         />
-
-
+        <Text style={styles.errorMessage}>{this.state.error}</Text>
+        <Button title="Sign In" onPress={this.signInRequest} /> 
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
           <View style={styles.button}>
             <Text style={styles.buttonText}>Need an account? Click here</Text>
@@ -95,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default SignIn;   

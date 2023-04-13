@@ -1,11 +1,12 @@
 import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, FlatList } from 'react-native';
-import { signupUser } from '../api/apiClient';
+import { ScrollView } from 'react-native-web';
 
 
 class SignUp extends Component {
   constructor(props) {
     super(props);
+   
     this.state = {
       firstname: "",
       lastname: "",
@@ -16,32 +17,42 @@ class SignUp extends Component {
       error: ""
     }
   }
+
   _validateInputs = () => {
-    var validator =
+    const validator =
       require("email-validator");
-    const REGEX_PASS = new
-      RegExp("^(?=.*?[A-Z])(?=.*?[a-z)(?=.*?[0-9])(?[#?!@$%^&*-]).{8,}$")
+   //const password_regex = new password_regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/);
+    const REGEX_PASS = new RegExp(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/);
 
     if (!(this.state.email &&
       this.state.password &&
       this.state.firstname &&
       this.state.lastname &&
       this.state.confirmpassword)) {
-      return "User you must Fill in all the feilds to continue";
+      console.log("User you must Fill in all the feilds to continue");
     }
-    if (!validator.validate(this.state.email)) {
-      return "Email must be in a valid formate to proceed";
+    else if (!validator.validate(this.state.email)) {
+      console.log("Email must be in a valid formate to proceed");
     }
-    if (REGEX_PASS.test(this.state.password)) {
-      return "User the password isnt strong enough";
+    else if (!(REGEX_PASS.test(this.state.password))) {
+     console.log("User the password isnt strong enough");
+     }else{
+      //this will point to the  signupRequest  that deals with the request
+      this.signupRequest();
     }
   }
 
-  emailHandler = (newEmail) =>{
+  firstnameHandler = (fn) =>{
     this.setState({
-      email: newEmail
+      firstname: fn
     })
-    console.log("email: " + this.state.email)
+   
+  }
+  lastnameHandler = (ln) =>{
+    this.setState({
+      lastname: ln
+    })
+   
   }
 
   passwordHandler = (pass) =>{
@@ -50,11 +61,57 @@ class SignUp extends Component {
     })
     console.log("password: " + this.state.password)
   }
+  emailHandler = (newEmail) =>{
+    this.setState({
+      email: newEmail
+    })
+    console.log("email: " + this.state.email)
+  }
+
+  confirmpasswordHandler = (cpass) =>{
+    this.setState({
+      confirmpassword: cpass
+    })
+    console.log("password: " + this.state.password)
+  }
+
+  //makes the request to the api , handles the response of when a user signs up 
+  signupRequest = () =>{
+    const data = {
+
+      first_name :this.state.firstname,
+      last_name :this.state.lastname,
+      email:this.state.email,
+      password: this.state.password,
+      
+    };
+    fetch('http://localhost:3333/api/1.0.0/user',{
+      method: 'post',
+      headers:{
+        'content-type': 'application/json',
+       },
+       body: JSON.stringify(data),
+    })
+    //handling the response 
+    .then((response)=>{
+      if(response.status ==400){
+        this.setState({error: "Bad Request, Please try again follow the registation form thank you"});
+      }else if(response.status ==500){
+        this.setState({error: "Hmmm something went wrong here , server has failed!"});
+    }else{
+        this.props.navigation.navigate('SignIn');
+    }
+}) 
+
+  
+  }
+
+  
   // handle sign-up logic here
   render() {
     return (
 
-      <View style={styles.container}>
+      <ScrollView>
         <Image
           style={styles.logo}
           source={require('../assets/WhatsthatAppLogo.png')}
@@ -83,7 +140,7 @@ class SignUp extends Component {
           style={styles.input}
           placeholder="Password"
           secureTextEntry
-          value={this.state.confirmpassword}
+          value={this.state.password}
           onChangeText={this.passwordHandler}
         />
           <TextInput
@@ -91,11 +148,11 @@ class SignUp extends Component {
           placeholder="Confirm Password"
           secureTextEntry
           value={this.state.confirmpassword}
-          onChangeText={this.passwordHandler}
+          onChangeText={this.confirmpasswordHandler}
         />
        
-        <Button title="Sign Up" onPress={signupUser} />
-      </View>
+        <Button title="Sign Up" onPress={this._validateInputs} />
+      </ScrollView>
     ); 
   };
 }
