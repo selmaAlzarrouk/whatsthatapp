@@ -82,7 +82,7 @@ class SignIn extends Component {
         <Button title="Sign In" onPress={this.signInRequest} /> 
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
           <View style={styles.button}>
-            <Text style={styles.buttonText}>Need an account? Click here</Text>
+            <Text style={styles.buttonText}>Register</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -111,6 +111,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    paddingHorizontal: 20,
+    backgroundColor: 342E7 },
   input: {
     width: '80%',
     height: 40,

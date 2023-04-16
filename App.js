@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet, Text, View } from 'react-native';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
+import SignUp from './screens/SignUp';
+import SignIn from './screens/SignIn';
+import MainNavigation from './screens/MainNavigation';
 // here ive imported the create stack navi function to my app ! 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();  // here i am declaring a new stack navi !
+const AuthenticationStack = createNativeStackNavigator();  // here i am declaring a new stack navi !
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SignIn'>
-        <Stack.Screen name = "SignIn" component={SignIn} />
-        <Stack.Screen name = "Register" component={SignUp} />
-        </Stack.Navigator>
+      <AuthenticationStack.Navigator initialRouteName='SignIn'>
+        <AuthenticationStack.Screen name = "SignIn" component={SignIn} />
+        <AuthenticationStack.Screen name = "Register" component={SignUp} />
+        <AuthenticationStack.Screen name = "MainNavigation" component={MainNavigation} />
+        </AuthenticationStack.Navigator>
 
     </NavigationContainer>
   );
