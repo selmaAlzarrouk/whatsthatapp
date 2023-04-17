@@ -1,5 +1,4 @@
 import React from "react";
-import { render } from "react-dom";
 import { View,Text, TouchableOpacity } from "react-native";
 
 const ContactObject =({contact, navigation})=>{

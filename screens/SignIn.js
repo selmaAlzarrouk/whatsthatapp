@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { userLogsin } from '../api/apiController';
 
 var validator = require("email-validator");
 validator.validate("test@gmail.com"); //true
@@ -39,24 +40,18 @@ class SignIn extends Component {
       password: this.state.password,
       
     };
-    fetch('http://localhost:3333/api/1.0.0/login',{
-      method: 'post',
-      headers:{
-        'content-type': 'application/json',
-       },
-       body: JSON.stringify(data),
+    userLogsin(data)
+    .then(() => {
+      this.setState({"submitted": false})
+      this.setState({"error": ""})
+      this.props.navigation.navigate("MainNavigation")
     })
-    //handling the response 
-    .then((response)=>{
-      if(response.status ==400){
-        this.setState({error: "Bad Request, Please try again follow the registation form thank you"});
-      }else if(response.status ==500){
-        this.setState({error: "Hmmm something went wrong here , server has failed!"});
-    }else{
-      console.log("Logged in woop woop!")
-       //REMINDER NOTE TO SELF :  this.props.navigation.navigate('contactPage'); i will need to make the navigation to go to the Contacts Page basically 
-    }
-}) 
+    .catch((error) =>{
+      this.setState({"submitted": false})
+      this.setState({"error": error});
+
+
+    });   
   
   }
 

@@ -20,3 +20,4 @@ const ContactList = ({ contacts, navigation}) => {
 </View>
 );
 }
+export default ContactList;

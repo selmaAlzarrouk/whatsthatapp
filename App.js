@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet, Text, View } from 'react-native';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
+//import { StyleSheet, Text, View } from 'react-native';
+import MainNavigation from './screens/MainNavigation';
+import SignUp from './screens/SignUp';
+import SignIn from './screens/SignIn';
 // here ive imported the create stack navi function to my app ! 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -13,6 +14,7 @@ const App = () => {
       <Stack.Navigator initialRouteName='SignIn'>
         <Stack.Screen name = "SignIn" component={SignIn} />
         <Stack.Screen name = "Register" component={SignUp} />
+        <Stack.Screen name = "MainNavigation" component={MainNavigation} /> 
         </Stack.Navigator>
    
     </NavigationContainer>
@@ -20,8 +22,6 @@ const App = () => {
 };        
 
 export default App;
-
-
 
 
 

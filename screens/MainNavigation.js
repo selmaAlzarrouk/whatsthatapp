@@ -1,15 +1,25 @@
+import React, {Component} from "react";
+import ContactsScreen from "./ContactScreen";
+
 // Tab and stack nav 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import AsyncStorage from '@react-native-async-storage';
 
 const Tab = createMaterialTopTabNavigator();
 const ContactStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const ChatStack = createNativeStackNavigator();
 function ContactStackNavigator(){
-    //my constact stack code here 
+    return (
+        <ContactStack.Navigator
+            initialRouteName="Contacts"
+            screenOptions={{ headerShown: false }}>
+               
+            <ContactStack.Screen name="ContactsScreen" component={ContactsScreen} />
+            
+        </ContactStack.Navigator>
+    )
 }
 function ProfileStackNavigator(){
     //my Profile  stack code here 
@@ -35,9 +45,7 @@ function ChatStackNavigator(){
             this.props.navigation.navigate('Login');
         }
     }
-
-
-
+  
     //ContactStack
    
            render() {
@@ -62,4 +70,5 @@ function ChatStackNavigator(){
         );
 }
 }
-}
+
+
