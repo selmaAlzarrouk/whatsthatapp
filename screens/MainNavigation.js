@@ -4,7 +4,8 @@ import ContactsScreen from "./ContactScreen";
 // Tab and stack nav 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import AsyncStorage from '@react-native-async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Tab = createMaterialTopTabNavigator();
 const ContactStack = createNativeStackNavigator();
@@ -26,8 +27,7 @@ function ProfileStackNavigator(){
 }
 function ChatStackNavigator(){
     //my chat stack code here 
-}
-    export default class MainNavigation extends Component {
+} export default class MainNavigation extends Component {
 
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
