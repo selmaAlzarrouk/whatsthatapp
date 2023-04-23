@@ -20,4 +20,14 @@ const ContactList = ({ contacts, navigation}) => {
 </View>
 );
 }
+const styles = StyleSheet.create({
+  contsContainer: {
+      //css styles here
+          flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
+  }
+  )
+
 export default ContactList;

@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import ContactsScreen from "./ContactScreen";
-
+import ContactAccountScreen from "./ContactScreen";
 // Tab and stack nav 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const Tab = createMaterialTopTabNavigator();
 const ContactStack = createNativeStackNavigator();
@@ -18,10 +17,12 @@ function ContactStackNavigator(){
             screenOptions={{ headerShown: false }}>
                
             <ContactStack.Screen name="ContactsScreen" component={ContactsScreen} />
-            
+            <ContactStack.Screen name="ContactAccountScreen" component={ContactAccountScreen} />
         </ContactStack.Navigator>
     )
 }
+
+
 function ProfileStackNavigator(){
     //my Profile  stack code here 
 }

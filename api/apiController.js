@@ -8,8 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getContactList = async () => {
     const token = await AsyncStorage.getItem('whatsthat_session_token');
-    return fetch("http://localhost:3333/api/1.0.0/contacts", {
-        method: 'GET',
+    return fetch(`http://localhost:3333/api/1.0.0/contacts`, {
+        method: `GET`,
         headers: {
             'X-Authorization': token
         }
@@ -24,8 +24,8 @@ export const getContactList = async () => {
 }
 
 export const userLogsin = async (data) => {
-       return fetch('http://localhost:3333/api/1.0.0/login', {
-        method: 'POST',
+       return fetch(`http://localhost:3333/api/1.0.0/login`, {
+        method: `POST`,
         headers: {
             'content-type': 'application/json'},
         body: JSON.stringify(data),
@@ -39,9 +39,7 @@ export const userLogsin = async (data) => {
         } else {
             throw "Server Error"
         }
-    })
-
-// storing contact id and also the token in the local storgae 
+    })// storing contact id and also the token in the local storgae 
 // such that it can be used in the application
     .then((reqJson) => {
         console.log(reqJson)
@@ -51,5 +49,47 @@ export const userLogsin = async (data) => {
     })
     .catch((error) => {
         console.log(error);
-    })
+   
+  })
 }
+
+
+export const getContactAccount = async (user_id) => {
+    const token = await AsyncStorage.getItem(`whatsthat_session_token`);
+    return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
+        method: `GET`,
+        headers: {
+  
+            'X-Authorization': token
+           // 'Content-Type': "application/json"
+        }
+    })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            return responseJson;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+  }
+
+
+
+  //API Function for Contact CHats functionality ! 
+  export const getContactLisData = async () => {
+    const token = await AsyncStorage.getItem('whatsthat_session_token');
+    return fetch(`http://localhost:3333/api/1.0.0/chats`, {
+        method: `GET`,
+        headers: {
+            'X-Authorization': token
+        }
+    })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            return responseJson;
+        })
+        .catch((error) => {
+            console.log(error);     
+        });
+}
+

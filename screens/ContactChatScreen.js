@@ -1,24 +1,21 @@
 import React, {Component} from "react";
-import { ActivityIndicator, View,StyleSheet,Text,TouchableOpacity } from "react-native";
+import {  ActivityIndicator, View,StyleSheet,Text,TouchableOpacity } from "react-native";
 import ContactList from "../components/ContactList";
-import { getContactList } from "../api/apiController";
-import { render } from "react-dom";
+import { getContactLisData } from "../api/apiController";
 
-export default class ContactsScreen extends Component {
+
+export default class ContactChatScreen extends Component {
     constructor(props) {
         super(props);
-
-
         this.state = {
             // this boolean is Trrue becuase I set
             //contact data has been fetched or not
             //its the checker for the api 
             isLoading: true,
-            contactData: []  //this holds the contact data
+            chats: []  //this holds the contact data
            
         };
     }
-
     componentDidMount() {
         //called when the screen is focused, it is called once  
         //when the screen is focused by the user
@@ -36,14 +33,14 @@ export default class ContactsScreen extends Component {
         });
     }
     componentWillUnmount(){
-        //called when screen is unfocused
+      
     }
    
     render() {
         return(
-           //everything inside here
+          
           <View>
-          <ContactList contacts={this.state.contactData} navigation={this.props.navigation}/>
+          <ContactList contacts={this.state.getContactLisData} navigation={this.props.navigation}/>
           </View>
           
         )
