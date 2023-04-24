@@ -54,7 +54,7 @@ export const userLogsin = async (data) => {
 }
 
 
-export const getContactAccount = async (user_id) => {
+export const getContactAccount = async (user_id, success, failure) => {
     const token = await AsyncStorage.getItem(`whatsthat_session_token`);
     return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
         method: `GET`,
