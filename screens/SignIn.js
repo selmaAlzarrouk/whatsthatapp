@@ -2,8 +2,13 @@ import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { userLogsin } from '../api/apiController';
 
+
+
 var validator = require("email-validator");
 validator.validate("test@gmail.com"); //true
+
+//<ApplicationProvider {...eva} theme={theme}>
+  // Your SignIn component code here 
 
 
 class SignIn extends Component {
@@ -80,15 +85,10 @@ class SignIn extends Component {
             <Text style={styles.buttonText}>Register</Text>
           </View>
         </TouchableOpacity>
-      </View>
-      
-
-      
-
-    );
+      </View>  
+        );
 }
 }
-
 
 const styles = StyleSheet.create({
   container: {
