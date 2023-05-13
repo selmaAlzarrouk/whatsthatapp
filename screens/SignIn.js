@@ -1,10 +1,9 @@
 import React, { Component, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { userLogsin } from '../api/apiController';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
+
 
 var validator = require("email-validator");
 validator.validate("test@gmail.com"); //true
-
 
 class SignIn extends Component {
   constructor(props) {
@@ -40,6 +39,7 @@ class SignIn extends Component {
       password: this.state.password,
       
     };
+  
     userLogsin(data)
     .then(() => {
       this.setState({"submitted": false})
@@ -60,6 +60,11 @@ class SignIn extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Sign In</Text>
+        <Image
+            style={styles.logo}
+            source={require('../assets/whatsThatLogo.png')}
+          />
+
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -97,9 +102,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
+    width: 300,
+    height: 300,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,

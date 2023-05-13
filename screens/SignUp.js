@@ -1,5 +1,5 @@
-import React, { Component, useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, ScrollView } from 'react-native';
+import React, { Component} from 'react';
+import {  Text, TextInput, Button, Image, StyleSheet, ScrollView } from 'react-native';
 
 class SignUp extends Component {
     constructor(props) {
@@ -113,7 +113,7 @@ class SignUp extends Component {
             <ScrollView>
                 <Image
                     style={styles.logo}
-                    source={require('../assets/WhatsthatAppLogo.png')}
+                    source={require('../assets/whatsThatLogo.png')}
                 />
                 <Text style={styles.title}>Sign Up</Text>
                 <TextInput
@@ -155,31 +155,36 @@ class SignUp extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logo: {
-        width: 150,
-        height: 150,
-        marginBottom: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    input: {
-        width: '80%',
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 10,
-        padding: 10,
-        marginBottom: 20,
-    },
-});
+    const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        logo: {
+          width: 300,
+          height: 300,
+          marginBottom: 10,
+        },
+        title: {
+          fontSize: 24,
+          fontWeight: 'bold',
+          marginBottom: 20,
+        },
+        button: {
+          borderRadius: 20,
+          padding: 10,
+          paddingHorizontal: 20,
+          backgroundColor: 342E7 },
+        input: {
+          width: '80%',
+          height: 40,
+          borderWidth: 1,
+          borderColor: '#ccc',
+          borderRadius: 10,
+          padding: 10,
+          marginBottom: 20,
+        },
+      });
 
 export default SignUp;
