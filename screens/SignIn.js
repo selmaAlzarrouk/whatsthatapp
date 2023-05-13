@@ -2,6 +2,8 @@ import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 
+
+
 var validator = require("email-validator");
 validator.validate("test@gmail.com"); //true
 
@@ -85,15 +87,10 @@ class SignIn extends Component {
             <Text style={styles.buttonText}>Register</Text>
           </View>
         </TouchableOpacity>
-      </View>
-      
-
-      
-
-    );
+      </View>  
+        );
 }
 }
-
 
 const styles = StyleSheet.create({
   container: {

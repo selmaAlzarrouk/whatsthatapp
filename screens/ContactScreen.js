@@ -21,6 +21,8 @@ export default class ContactsScreen extends Component {
             isLoading: true,
             contactData: [],  //this holds the contact data
             query: ``,
+            limit: 20,
+            offset: 0,
             userList: [],
             message: '',
             user_id : 0
@@ -117,11 +119,24 @@ export default class ContactsScreen extends Component {
             this.addContact();
         });
     };
+
+    fetchNewPage = ()=>{
+        const newOffset = this.state.offset +3;
+        this.setState({offset : newOffset },() => this.getData());
+
+    
+     }
+
+     fetchPreviousPage = ()=>{
+        const newOffset = this.state.offset-3;  
+        this.setState({offset : newOffset },() => this.getData());  
+     }
+
     // this will deal with the search of users 
     async getData() { //perfromes fetch req for users
         //The search function sends a fetch request to a local server at URL endpoint
         //passing the search query as a parameter in the URL :>
-        return fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}`, {
+        return fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=3&offset=${this.state.offset}`, {
             method: `GET`,
             headers: {
                 //request is authenticated with a session token retrieved from the device's AsyncStorage. 
@@ -185,6 +200,16 @@ export default class ContactsScreen extends Component {
                     )}
                     keyExtractor={({ id }, index) => id ? id.toString() : index.toString()}
                 />
+
+                <TouchableOpacity onPress={this.fetchPreviousPage}>
+                <Text>Previous</Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity onPress={this.fetchNewPage}>
+                <Text>Next</Text>
+                </TouchableOpacity>
+
 
             </View>
 
