@@ -23,34 +23,30 @@ export const getContactList = async () => {
         });
 }
 
-export const userLogsin = async (data) => {
-       return fetch(`http://localhost:3333/api/1.0.0/login`, {
+export const userLogsin = async (data, success, failure) => {
+    return fetch(`http://localhost:3333/api/1.0.0/login`, {
         method: `POST`,
         headers: {
-            'content-type': 'application/json'},
+            'content-type': 'application/json'
+        },
         body: JSON.stringify(data),
-     })
-     //handling the response 
-     .then((response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else if (response.status === 400) {
-            throw "Invalid use of Email / password you have supplied"
-        } else {
-            throw "Server Error"
-        }
-    })// storing contact id and also the token in the local storgae 
-// such that it can be used in the application
-    .then((reqJson) => {
-        console.log(reqJson)
-        const { token, id } = reqJson;
-        AsyncStorage.setItem('whatsthat_session_token', token);
-        AsyncStorage.setItem('id', id.toString());
     })
-    .catch((error) => {
-        console.log(error);
-   
-  })
+        //handling the response 
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 400) {
+                throw "Invalid use of Email / password you have supplied"
+            } else {
+                throw "Server Error"
+            }
+        })
+        .then((responseJson) => {
+            success(responseJson)
+        })
+        .catch((error) => {
+            failure(error);
+        });
 }
 
 
@@ -59,37 +55,152 @@ export const getContactAccount = async (user_id, success, failure) => {
     return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
         method: `GET`,
         headers: {
-  
+
             'X-Authorization': token
-           // 'Content-Type': "application/json"
+            // 'Content-Type': "application/json"
         }
     })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            return responseJson;
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 401) {
+                throw "Unauthroised"
+
+            } else if (response.status === 404) {
+                throw "Not Found"
+            } else {
+                throw "Server Error"
+            }
         })
-        .catch((err) => {
-            console.log(err);
+        .then((responseJson) => {
+            success(responseJson)
+        })
+        .catch((error) => {
+            failure(error);
         });
-  }
+}
 
 
 
-  //API Function for Contact CHats functionality ! 
-  export const getContactLisData = async () => {
+//API Function for Contact CHats functionality ! 
+export const getContactLisData = async (success,failure) => {
     const token = await AsyncStorage.getItem('whatsthat_session_token');
-    return fetch(`http://localhost:3333/api/1.0.0/chats`, {
+    return fetch(`http://localhost:3333/api/1.0.0/contacts`, {
         method: `GET`,
         headers: {
             'X-Authorization': token
         }
     })
-        .then((response) => response.json())
+    .then((response) => {
+        if (response.status === 200) {
+            return;
+        } else if (response.status === 401) {
+            throw " Unauthorised"
+        } else {
+            throw "Server Error"
+        }
+    })
+    .then((responseJson) => {
+        success(responseJson)
+    })
+    .catch((error) => {
+        failure(error);
+    });
+}
+
+
+export const PatchUserData = async (user_id, data, success, failure) => {
+    const token = await AsyncStorage.getItem(`whatsthat_session_token`);
+    return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
+        method: `PATCH`,
+        headers: {
+            'X-Authorization': token,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => {
+            if (response.status === 200) {
+                return;
+            } else if (response.status === 400) {
+                throw "Something Went Wrong, please check your input again"
+
+            } else if (response.status === 401) {
+                throw "Unauthorised"
+            }
+
+            else if (response.status === 403) {
+                throw "Forbidden"
+            }
+            else if (response.status === 404) {
+                throw "Not Found"
+            } else {
+                throw "Server Error"
+            }
+        })
         .then((responseJson) => {
-            return responseJson;
+            success(responseJson)
         })
         .catch((error) => {
-            console.log(error);     
+            failure(error);
         });
 }
 
+export const userLogout = async ( success, failure) => {
+    const token = await AsyncStorage.getItem(`whatsthat_session_token`);
+    return fetch(`http://localhost:3333/api/1.0.0/logout`, {
+        method: `POST`,
+        headers: {
+            'X-Authorization': token,
+            'content-type': 'application/json'
+        },
+        
+    })
+        //handling the response 
+        .then((response) => {
+            if (response.status === 200) {
+                return;
+            } else if (response.status === 401) {
+                throw "Unauthorized"
+            } else {
+                throw "Server Error"
+            }
+        })
+        .then(() => {
+            success()
+        })
+        .catch((error) => {
+            failure(error);
+        });
+}
+
+
+
+export const getAccountPhoto = async (user_id, success, failure) => {
+    const token = await AsyncStorage.getItem(`whatsthat_session_token`);
+    return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/photo`, {
+        method: `GET`,
+        headers: {
+
+            'X-Authorization': token
+                }
+    })
+        .then((response) => {
+            if (response.status === 200) {
+                return response.blob();
+            } else if (response.status === 401) {
+                throw "Unauthroised"
+
+            } else if (response.status === 404) {
+                throw "Not Found"
+            } else {
+                throw "Server Error"
+            }
+        })
+        .then((responseblob) => {
+            success(responseblob)
+        })
+        .catch((error) => {
+            failure(error);
+        });
+}

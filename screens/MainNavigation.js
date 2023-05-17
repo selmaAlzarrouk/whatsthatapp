@@ -1,10 +1,13 @@
 import React, {Component} from "react";
 import ContactsScreen from "./ContactScreen";
 import ContactAccountScreen from "./ContactScreen";
+import MyProfile from "./myProfile";
+import UsersScreen from "./UsersScreen";
 // Tab and stack nav 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Tab = createMaterialTopTabNavigator();
 const ContactStack = createNativeStackNavigator();
@@ -15,20 +18,28 @@ function ContactStackNavigator(){
         <ContactStack.Navigator
             initialRouteName="Contacts"
             screenOptions={{ headerShown: false }}>
-               
             <ContactStack.Screen name="ContactsScreen" component={ContactsScreen} />
-            <ContactStack.Screen name="ContactAccountScreen" component={ContactAccountScreen} />
         </ContactStack.Navigator>
     )
 }
 
 
 function ProfileStackNavigator(){
-    //my Profile  stack code here 
+    return(
+        <ProfileStack.Navigator
+    initialRouteName="Account"
+    screenOptions={{ headerShown: false }}>
+     <ProfileStack.Screen name="Account" component={MyProfile} />
+    </ProfileStack.Navigator>
+    )
+
+   
 }
 function ChatStackNavigator(){
     //my chat stack code here 
-} export default class MainNavigation extends Component {
+} 
+
+export default class MainNavigation extends Component {
 
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -49,7 +60,7 @@ function ChatStackNavigator(){
   
     //ContactStack
    
-           render() {
+    render() {
         return (
             
                 <Tab.Navigator
@@ -64,6 +75,7 @@ function ChatStackNavigator(){
                     <Tab.Screen name="Contacts" component={ContactStackNavigator} />
                     <Tab.Screen name="Chats" component={ChatStackNavigator} />
                     <Tab.Screen name="Profile" component={ProfileStackNavigator} />
+                    <Tab.Screen name="Users" component={UsersScreen} />
 
                 </Tab.Navigator>
            

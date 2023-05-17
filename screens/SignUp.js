@@ -97,13 +97,14 @@ class SignUp extends Component {
 
             //handling the response 
             .then((response) => {
+                if (response.status == 201) {
+                    this.props.navigation.navigate('SignIn');    //CREATED account DO !! 
+                }
                 if (response.status == 400) {
                     this.setState({ error: "Bad Request, Please try again follow the registation form thank you" });
                 } else if (response.status == 500) {
                     this.setState({ error: "Hmmm something went wrong here , server has failed!" });
-                } else {
-                    this.props.navigation.navigate('SignIn');
-                }
+                } 
             })
     }
 

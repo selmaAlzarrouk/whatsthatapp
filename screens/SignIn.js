@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
-
+import { userLogsin } from '../api/apiController';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -42,18 +43,13 @@ class SignIn extends Component {
       
     };
   
-    userLogsin(data)
-    .then(() => {
-      this.setState({"submitted": false})
-      this.setState({"error": ""})
-      this.props.navigation.navigate("MainNavigation")
-    })
-    .catch((error) =>{
-      this.setState({"submitted": false})
-      this.setState({"error": error});
-
-
-    });   
+    userLogsin(data,
+      (async (responseJson) => {
+        await AsyncStorage.setItem('whatsthat_session_token', responseJson.token);
+        await AsyncStorage.setItem('id', responseJson.id);
+        this.props.navigation.navigate("MainNavigation")
+      }),
+      ((err) => this.setState({error: err})))
   
   }
 
