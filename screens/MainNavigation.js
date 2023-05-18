@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import ContactsScreen from "./ContactScreen";
-import ContactAccountScreen from "./ContactScreen";
+
 import MyProfile from "./myProfile";
 import UsersScreen from "./UsersScreen";
+import BlockedScreen from "./BlockedScreen";
+import ContactsScreen from "./ContactScreen";
+import ChatScreen from "./ChatScreen";
 // Tab and stack nav 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -13,15 +15,6 @@ const Tab = createMaterialTopTabNavigator();
 const ContactStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 const ChatStack = createNativeStackNavigator();
-function ContactStackNavigator(){
-    return (
-        <ContactStack.Navigator
-            initialRouteName="Contacts"
-            screenOptions={{ headerShown: false }}>
-            <ContactStack.Screen name="ContactsScreen" component={ContactsScreen} />
-        </ContactStack.Navigator>
-    )
-}
 
 
 function ProfileStackNavigator(){
@@ -35,9 +28,6 @@ function ProfileStackNavigator(){
 
    
 }
-function ChatStackNavigator(){
-    //my chat stack code here 
-} 
 
 export default class MainNavigation extends Component {
 
@@ -72,10 +62,11 @@ export default class MainNavigation extends Component {
                             inactiveTintColor: 'gray'
                         },
                     }}>
-                    <Tab.Screen name="Contacts" component={ContactStackNavigator} />
-                    <Tab.Screen name="Chats" component={ChatStackNavigator} />
+                    <Tab.Screen name="Contacts" component={ContactsScreen} />
+                    <Tab.Screen name="Chats" component={ChatScreen} />
                     <Tab.Screen name="Profile" component={ProfileStackNavigator} />
                     <Tab.Screen name="Users" component={UsersScreen} />
+                    <Tab.Screen name="Blocked" component={BlockedScreen} />
 
                 </Tab.Navigator>
            

@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
-export default class UsersScreen extends Component {
+export default class singleChatScreen extends Component {
 
     constructor(props) {
         super(props);
