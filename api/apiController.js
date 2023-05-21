@@ -176,7 +176,7 @@ export const getBlockedContacts = async (success, failure) => {
 };
 
 export const sendMessage = async (chat_id, mssg, success, failure) => {
-    const data ={message: mssg};
+  const data = { message: mssg };
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/`, {
     method: 'POST',
@@ -387,6 +387,32 @@ export const createChat = async (chatName, success, failure) => {
       failure(error);
     });
 };
+export const addUsertoChat = async (chat_id, user_id, success, failure) => {
+  const token = await AsyncStorage.getItem('whatsthat_session_token');
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
+    method: 'POST',
+    headers: {
+      'X-Authorization': token,
+      'content-type': 'application/json',
+    },
+  })
+  // handling the response
+    .then((response) => {
+      if (response.status === 201) {
+
+      } else if (response.status === 400) {
+        throw 'Bad';
+      } else {
+        throw 'Server Error';
+      }
+    })
+    .then(() => {
+      success();
+    })
+    .catch((error) => {
+      failure(error);
+    });
+};
 
 export const getAccountPhoto = async (user_id, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
@@ -414,7 +440,6 @@ export const getAccountPhoto = async (user_id, success, failure) => {
     .catch((error) => {
       failure(error);
     });
-
 };
 
 export const PatchChatName = async (chat_id, data, success, failure) => {
@@ -450,8 +475,7 @@ export const PatchChatName = async (chat_id, data, success, failure) => {
     });
 };
 
-
-export const deleteMessage = async (chat_id,message_id, success, failure) => {
+export const deleteMessage = async (chat_id, message_id, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {
     method: 'delete',
@@ -469,7 +493,7 @@ export const deleteMessage = async (chat_id,message_id, success, failure) => {
         throw 'Unauthorised';
       } else if (response.status === 403) {
         throw 'Forbidden';
-      }  else if (response.status === 404) {
+      } else if (response.status === 404) {
         throw 'Not Found';
       } else {
         throw 'Server Error';
@@ -483,7 +507,6 @@ export const deleteMessage = async (chat_id,message_id, success, failure) => {
       failure(error);
     });
 };
-
 
 export const editMessage = async (chat_id, message_id, data, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
@@ -515,4 +538,5 @@ export const editMessage = async (chat_id, message_id, data, success, failure) =
     })
     .catch((error) => {
       failure(error);
-    });}
+    });
+};

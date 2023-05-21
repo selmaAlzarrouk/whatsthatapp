@@ -85,7 +85,10 @@ export default class singleChatScreen extends Component {
           title="Edit Chat Name"
           onPress={() => { this.props.navigation.navigate('editChat'); }}
         />
-
+        <Button
+          title="Edit Group Members"
+          onPress={() => { this.props.navigation.navigate('editMembers'); }}
+        />
         <TextInput
           placeholder="new Message"
           value={this.state.message}

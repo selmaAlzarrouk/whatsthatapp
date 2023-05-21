@@ -14,6 +14,7 @@ import singleChatScreen from './singleChatScreen';
 import editChatName from './editChatName';
 import EditMessage from './EditMessage';
 import { editMessage } from '../api/apiController';
+import chatGroupManagement from './chatGroupManagement';
 // Tab and stack nav
 
 const Tab = createMaterialTopTabNavigator();
@@ -41,6 +42,7 @@ function ChatsStackNavigator() {
       <ChatStack.Screen name="SingleChat" component={singleChatScreen} />
       <ChatStack.Screen name="editChat" component={editChatName}/>
       <ChatStack.Screen name="editMessage" component={EditMessage}/>
+      <ChatStack.Screen name="editMembers" component={chatGroupManagement}/>
     </ChatStack.Navigator>
   );
 }
