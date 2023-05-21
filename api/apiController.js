@@ -450,6 +450,41 @@ export const PatchChatName = async (chat_id, data, success, failure) => {
     });
 };
 
+
+export const deleteMessage = async (chat_id,message_id, success, failure) => {
+  const token = await AsyncStorage.getItem('whatsthat_session_token');
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {
+    method: 'delete',
+    headers: {
+      'X-Authorization': token,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (response.status === 200) {
+
+      } else if (response.status === 400) {
+        throw 'Bad Request';
+      } else if (response.status === 401) {
+        throw 'Unauthorised';
+      } else if (response.status === 403) {
+        throw 'Forbidden';
+      }  else if (response.status === 404) {
+        throw 'Not Found';
+      } else {
+        throw 'Server Error';
+      }
+    })
+    .then(() => {
+      success();
+      console.log('WEEWOO');
+    })
+    .catch((error) => {
+      failure(error);
+    });
+};
+
+
 export const editMessage = async (chat_id, message_id, data, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {

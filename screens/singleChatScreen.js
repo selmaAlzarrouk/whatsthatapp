@@ -9,6 +9,8 @@ import ContactList from '../components/ContactList';
 import { getSingleChat, getContactList, PatchChatName } from '../api/apiController';
 // import { Settings } from '@material-ui/icons';
 import { sendMessage } from '../api/apiController';
+import { deleteMessage } from '../api/apiController';
+
 
 export default class singleChatScreen extends Component {
   constructor(props) {
@@ -18,6 +20,7 @@ export default class singleChatScreen extends Component {
       chatData: [],
       message: '',
       user_id: 0,
+      error: '',
     };
 
     this.editMsg = this.editMsg.bind(this);
@@ -58,6 +61,16 @@ export default class singleChatScreen extends Component {
     this.props.navigation.navigate("editMessage");
   }
 
+  
+  deleteMsg = async (messageID) => {
+      deleteMessage(await AsyncStorage.getItem('chatID'),messageID,
+      (()=>{this.getData()}),
+      ((err) => {
+        this.setState({ error: err });
+      }))
+      
+  }
+
   render() {
     return (
     // everything inside here
@@ -92,7 +105,7 @@ export default class singleChatScreen extends Component {
                 {item.author.first_name}
                 {item.timestamp}
               </Text>
-              <TouchableOpacity onPress={() => this.deleteMsg(item.messag_id)}>
+              <TouchableOpacity onPress={() => this.deleteMsg(item.message_id)}>
                 <Text>Delete Message</Text>
 
               </TouchableOpacity>
