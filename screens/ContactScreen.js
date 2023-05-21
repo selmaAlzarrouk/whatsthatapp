@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+//UI react native Elements : 
+import { ListItem } from 'react-native-elements';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Button,
+  ActivityIndicator, View, Text, StyleSheet, TextInput, TouchableOpacity, Button,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 import { render } from 'react-dom';
@@ -11,6 +13,7 @@ import { getContactLisData, getContactList, blockContact } from '../api/apiContr
 
 // import { getContactLisData } from "../api/apiController";
 import { deleteContact } from '../api/apiController';
+
 
 export default class ContactsScreen extends Component {
   constructor(props) {
@@ -84,38 +87,31 @@ export default class ContactsScreen extends Component {
   };
 
   render() {
-    console.log('ScreenReached');
     return (
-
-    // everything inside here
       <View>
         <Text>Hello World!!!</Text>
-
+  
         <FlatList
           data={this.state.contactArr}
           renderItem={({ item }) => (
-            <View>
-              <Text>
-                {item.first_name}
-                {' '}
-                {item.last_name}
-              </Text>
-              <TouchableOpacity onPress={() => this.deleteContactHandler(item.user_id)}>
-                <Text>Delete Contact</Text>
-
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
-                <Text>Block Contact</Text>
-              </TouchableOpacity>
-
-            </View>
+            <ListItem
+              onPress={() => this.deleteContactHandler(item.user_id)}
+              bottomDivider
+            >
+              <ListItem.Content>
+                <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
+                <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
+                  <Text style={{ color: 'red' }}>Block Contact</Text>
+                </TouchableOpacity>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
           )}
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
         />
         <Text>{this.state.message}</Text>
-
       </View>
-
     );
   }
-}
+}  

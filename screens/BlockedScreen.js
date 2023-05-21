@@ -6,6 +6,9 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 // import { Settings } from '@material-ui/icons';
+//UI react native cwk 10%
+import { Icon, ListItem } from 'react-native-elements';
+
 
 import {
   getBlockedContacts, unblockContact,
@@ -51,31 +54,30 @@ export default class BlockedScreen extends Component {
 
   render() {
     return (
-
       <View>
-
+        <Text>Blocked Contacts:</Text>
+  
         <FlatList
           data={this.state.blockedArr}
           renderItem={({ item }) => (
-            <View>
-              <Text>
-                {item.first_name}
-                {' '}
-                {item.last_name}
-              </Text>
-              <TouchableOpacity onPress={() => this.unblockContactHandler(item.user_id)}>
-                <Text>Unblock Contact</Text>
-
-              </TouchableOpacity>
-
-            </View>
+            <ListItem
+              onPress={() => this.unblockContactHandler(item.user_id)}
+              bottomDivider
+            >
+              <Icon name="lock" type="font-awesome" color="red" />
+              <ListItem.Content>
+                <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                <TouchableOpacity onPress={() => this.unblockContactHandler(item.user_id)}>
+                  <Text style={{ color: 'green' }}>Unblock Contact</Text>
+                </TouchableOpacity>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
           )}
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
         />
         <Text>{this.state.message}</Text>
-
       </View>
-
     );
   }
-}
+}  

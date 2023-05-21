@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+//UI react Native elements library: 
+import { FontAwesome } from '@expo/vector-icons';
+import { Input, Button, ListItem } from 'react-native-elements';
 import {
   ActivityIndicator, View, StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
@@ -70,30 +73,36 @@ export default class ChatScreen extends Component {
   render() {
     return (
       <View>
-        <TextInput
-          placeholder="create new chat"
-          value={this.state.query}
+        <Input
+          placeholder="Create new chat"
+          value={this.state.chatName}
           onChangeText={this.createChatHandler}
+          leftIcon={<FontAwesome name="comment" size={24} color="black" />}
+          containerStyle={{ marginBottom: 16 }}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
         />
-        <TouchableOpacity onPress={this.createChat}>
-          <Text>Create chat</Text>
-        </TouchableOpacity>
+        <Button
+          title="Create Chat"
+          onPress={this.createChat}
+          buttonStyle={{ backgroundColor: '#007bff', marginBottom: 16 }}
+        />
         <FlatList
           data={this.state.chats}
           renderItem={({ item }) => (
-            <View>
-              <TouchableOpacity onPress={() => this.singleChatSelect(item.chat_id)}>
-                <Text>{item.name}</Text>
-                <Text>{item.creator.first_name}</Text>
-              </TouchableOpacity>
-
-            </View>
+            <ListItem
+              onPress={() => this.singleChatSelect(item.chat_id)}
+              bottomDivider
+              chevron
+            >
+              <ListItem.Content>
+                <ListItem.Title>{item.name}</ListItem.Title>
+                <ListItem.Subtitle>{item.creator.first_name}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
           )}
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
         />
-
       </View>
-
     );
   }
 }

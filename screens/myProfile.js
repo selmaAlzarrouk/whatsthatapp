@@ -4,10 +4,7 @@ import { FlatList } from "react-native-web";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getContactAccount } from "../api/apiController";
 import { Button } from '@rneui/base';
-import { PatchUserData } from "../api/apiController";
-import { userLogout } from "../api/apiController";
-import { getAccountPhoto } from "../api/apiController";
-
+import { getAccountPhoto,PatchUserData,userLogout } from "../api/apiController";
 export default class MyProfile extends Component {
 
     constructor(props) {
@@ -118,36 +115,108 @@ export default class MyProfile extends Component {
 
 
     render() {
+        const { firstname, lastname, email, userInfo, profilePhoto, message } = this.state;
+    
         return (
-
-            <View>
-                <Text>My Profile Info: </Text>
-                <Image source={{uri: this.state.profilePhoto}} style={{width: 150, height: 150}}/>
-                <Text>{this.state.userInfo.first_name}</Text>
-                <Text>{this.state.userInfo.last_name}</Text>
-                <Text>{this.state.userInfo.email}</Text>
-
-                <Text>update First name</Text>
-                <TextInput value={this.state.firstname} onChangeText={this.firstnameHandler} />
-                <Text>update Fname</Text>
-                <TextInput value={this.state.lastname} onChangeText={this.lastnameHandler} />
-                <TextInput value={this.state.email} onChangeText={this.emailHandler} />
-
-
-                <Button radius={'large'} type="solid" onPress={this.GeneratePatchData}>
-                    Save
-
-                </Button>
-                <Text>{this.state.message}</Text>
-                <Button radius={'large'} type="solid" onPress={this.sessionLogout}>
-                    Logout
-
-                </Button>
-
+            <View style={styles.container}>
+              <Text style={styles.heading}>My Profile Info:</Text>
+              {profilePhoto && (
+                <Image source={{ uri: profilePhoto }} style={styles.profilePhoto} />
+              )}
+              <Text style={styles.info}>{userInfo.first_name}</Text>
+              <Text style={styles.info}>{userInfo.last_name}</Text>
+              <Text style={styles.info}>{userInfo.email}</Text>
+        
+              <Text style={styles.label}>Update First Name:</Text>
+              <TextInput
+                style={styles.input}
+                value={firstname}
+                onChangeText={this.firstnameHandler}
+              />
+              <Text style={styles.label}>Update Last Name:</Text>
+              <TextInput
+                style={styles.input}
+                value={lastname}
+                onChangeText={this.lastnameHandler}
+              />
+              <Text style={styles.label}>Update Email:</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={this.emailHandler}
+              />
+        
+              <Button
+                title="Save"
+                onPress={() => this.GeneratePatchData()}
+                containerStyle={styles.buttonContainer}
+                buttonStyle={styles.saveButton}
+              />
+        
+              <Text style={styles.message}>{message}</Text>
+        
+              <Button
+                title="Logout"
+                onPress={() => this.sessionLogout()}
+                containerStyle={styles.buttonContainer}
+                buttonStyle={styles.logoutButton}
+              />
             </View>
+          );
 
-        )
+          
+        }
 
     }
-}
 
+
+    const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        heading: {
+          fontSize: 17,
+          fontWeight: 'bold',
+          marginBottom: 16,
+        },
+        profilePhoto: {
+          width: 150,
+          height: 150,
+          marginBottom: 16,
+          borderRadius: 10,
+        },
+        info: {
+          fontSize: 16,
+          marginBottom: 8,
+        },
+        label: {
+          fontSize: 16,
+          marginTop: 16,
+        },
+        input: {
+          width: '80%',
+          height: 40,
+          borderColor: 'gray',
+          borderWidth: 1,
+          marginBottom: 16,
+          paddingHorizontal: 10,
+        },
+        buttonContainer: {
+          marginTop: 5,
+          width: '80%',
+        },
+        saveButton: {
+          backgroundColor: '#007bff',
+        },
+        logoutButton: {
+          backgroundColor: '#007bff',
+        },
+        message: {
+          marginTop: 16,
+          fontSize: 16,
+          color: 'green',
+        },
+      });
+      
