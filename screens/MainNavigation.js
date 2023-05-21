@@ -11,6 +11,9 @@ import BlockedScreen from './BlockedScreen';
 import ContactsScreen from './ContactScreen';
 import ChatScreen from './ChatScreen';
 import singleChatScreen from './singleChatScreen';
+import editChatName from './editChatName';
+import EditMessage from './EditMessage';
+import { editMessage } from '../api/apiController';
 // Tab and stack nav
 
 const Tab = createMaterialTopTabNavigator();
@@ -36,6 +39,8 @@ function ChatsStackNavigator() {
     >
       <ChatStack.Screen name="Chat" component={ChatScreen} />
       <ChatStack.Screen name="SingleChat" component={singleChatScreen} />
+      <ChatStack.Screen name="editChat" component={editChatName}/>
+      <ChatStack.Screen name="editMessage" component={EditMessage}/>
     </ChatStack.Navigator>
   );
 }

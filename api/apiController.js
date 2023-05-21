@@ -414,4 +414,70 @@ export const getAccountPhoto = async (user_id, success, failure) => {
     .catch((error) => {
       failure(error);
     });
+
 };
+
+export const PatchChatName = async (chat_id, data, success, failure) => {
+  const token = await AsyncStorage.getItem('whatsthat_session_token');
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}`, {
+    method: 'PATCH',
+    headers: {
+      'X-Authorization': token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (response.status === 200) {
+
+      } else if (response.status === 400) {
+        throw 'Something Went Wrong, please check your input again';
+      } else if (response.status === 401) {
+        throw 'Unauthorised';
+      } else if (response.status === 403) {
+        throw 'Forbidden';
+      } else if (response.status === 404) {
+        throw 'Not Found';
+      } else {
+        throw 'Server Error';
+      }
+    })
+    .then((responseJson) => {
+      success(responseJson);
+    })
+    .catch((error) => {
+      failure(error);
+    });
+};
+
+export const editMessage = async (chat_id, message_id, data, success, failure) => {
+  const token = await AsyncStorage.getItem('whatsthat_session_token');
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {
+    method: 'PATCH',
+    headers: {
+      'X-Authorization': token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (response.status === 200) {
+
+      } else if (response.status === 400) {
+        throw 'Something Went Wrong, please check your input again';
+      } else if (response.status === 401) {
+        throw 'Unauthorised';
+      } else if (response.status === 403) {
+        throw 'Forbidden';
+      } else if (response.status === 404) {
+        throw 'Not Found';
+      } else {
+        throw 'Server Error';
+      }
+    })
+    .then((responseJson) => {
+      success(responseJson);
+    })
+    .catch((error) => {
+      failure(error);
+    });}

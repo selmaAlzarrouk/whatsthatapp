@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-//UI react Native elements library: 
+// UI react Native elements library:
 import { FontAwesome } from '@expo/vector-icons';
 import { Input, Button, ListItem } from 'react-native-elements';
 import {
@@ -23,7 +23,13 @@ export default class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    this.getData();
+    this.unsubscribe = this.props.navigation.addListener('focus', async () => {
+      this.getData();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   async getData() {
