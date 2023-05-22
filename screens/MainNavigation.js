@@ -15,6 +15,10 @@ import editChatName from './editChatName';
 import EditMessage from './EditMessage';
 import { editMessage } from '../api/apiController';
 import chatGroupManagement from './chatGroupManagement';
+// UI IMPORTS 
+//import { Icon } from 'react-native-elements';
+//import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 // Tab and stack nav
 
 const Tab = createMaterialTopTabNavigator();
@@ -70,7 +74,7 @@ export default class MainNavigation extends Component {
   render() {
     return (
 
-      <Tab.Navigator
+    /*  <Tab.Navigator
         initialRouteName="Contacts"
         screenOptions={{
           tabBarOptions: {
@@ -86,7 +90,49 @@ export default class MainNavigation extends Component {
         <Tab.Screen name="Users" component={UsersScreen} />
         <Tab.Screen name="Blocked" component={BlockedScreen} />
 
-      </Tab.Navigator>
+      </Tab.Navigator> */
+      <Tab.Navigator
+  initialRouteName="Contacts"
+  screenOptions={({ route }) => ({
+    tabBarIcon: ({ color, size }) => {
+      let iconName;
+      if (route.name === 'Contacts') {
+        iconName = 'account-box'; // Change to the appropriate icon name from MaterialCommunityIcons
+      } else if (route.name === 'Chats') {
+        iconName = 'chat';
+      } else if (route.name === 'Profile') {
+        iconName = 'account';
+      } else if (route.name === 'Users') {
+        iconName = 'person-add-alt-1';
+      } else if (route.name === 'Blocked') {
+        iconName = 'block-helper';
+      }
+      return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+      
+    },
+  })}
+  tabBarOptions={{
+    activeTintColor: 'white',
+    inactiveTintColor: 'black',
+    style: {
+      backgroundColor: '#007bff',
+    },
+    labelStyle: {
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+  }}
+>
+  {/* Tab.Screen components */}
+
+
+
+  <Tab.Screen name="Contacts" component={ContactsScreen} />
+        <Tab.Screen name="Chats" component={ChatsStackNavigator} />
+        <Tab.Screen name="Profile" component={ProfileStackNavigator} />
+        <Tab.Screen name="Users" component={UsersScreen} />
+        <Tab.Screen name="Blocked" component={BlockedScreen} />
+</Tab.Navigator>
 
     );
   }

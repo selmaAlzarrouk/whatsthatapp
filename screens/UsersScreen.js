@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
-import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Button,
-} from 'react-native';
-import { FlatList } from 'react-native-web';
-import { render } from 'react-dom';
+import { View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
+import { Button, ListItem, Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ContactList from '../components/ContactList';
-// import { Settings } from '@material-ui/icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { getContactList } from '../api/apiController';
 
 export default class UsersScreen extends Component {
   constructor(props) {
     super(props);
-    /* */ this.state = {
-      // this boolean is Trrue becuase I set
-      // contact data has been fetched or not
-      // its the checker for the api
-      isLoading: true,
-      contactData: [], // this holds the contact data
+    this.state = {
       query: '',
-      limit: 20,
-      offset: 0,
       userList: [],
       message: '',
       user_id: 0,
@@ -32,11 +21,9 @@ export default class UsersScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       console.log('Screen reached');
       this.getData();
-      // below I want to grab the Contact List data so :
       getContactList()
         .then((responseJson) => {
           this.setState({
-            isLoading: false,
             contactData: responseJson,
           });
         })
@@ -44,19 +31,12 @@ export default class UsersScreen extends Component {
           console.log(error);
         });
     });
-    // called when the screen is focused, it is called once
-    // when the screen is focused by the user
   }
 
   componentWillUnmount() {
-    // called when screen is unfocused
     this.unsubscribe();
   }
 
-  /**
- *
- * @returns
- */
   async addContact() {
     try {
       const token = await AsyncStorage.getItem('whatsthat_session_token');
@@ -68,10 +48,9 @@ export default class UsersScreen extends Component {
       });
 
       if (response.status === 200) {
-        // code to add the contact
         this.setState({ message: 'Added to Contacts' });
         return;
-      } if (response.status === 400) {
+      } else if (response.status === 400) {
         throw 'You can\'t add yourself as a contact';
       } else if (response.status === 401) {
         throw 'Unauthorized';
@@ -101,89 +80,90 @@ export default class UsersScreen extends Component {
     this.setState({ offset: newOffset }, () => this.getData());
   };
 
-  // this will deal with the search of users
-  async getData() { // perfromes fetch req for users
-    // The search function sends a fetch request to a local server at URL endpoint
-    // passing the search query as a parameter in the URL :>
-    return fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=3&offset=${this.state.offset}`, {
-      method: 'GET',
-      headers: {
-        // request is authenticated with a session token retrieved from the device's AsyncStorage.
-
-        'x-authorization': await AsyncStorage.getItem('whatsthat_session_token'),
-      },
-    })
-      .then((response) => response.json())
-    // The response is expected to be in JSON format and is stored in the component's state
-    // under the userList key.
-      .then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          userList: responseJson,
-
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+  async getData() {
+    try {
+      const response = await fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=3&offset=${this.state.offset}`, {
+        method: 'GET',
+        headers: {
+          'x-authorization': await AsyncStorage.getItem('whatsthat_session_token'),
+        },
       });
+
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        this.setState({
+          userList: responseJson,
+        });
+      } else {
+        throw 'Error fetching data';
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // queryHandler function updates the state with latest search query entered in the text input field,
-  // then the searchUsers function calls the getData function to fetch the results.
   queryHandler = (searchQuery) => {
     this.setState({ query: searchQuery });
-    console.log(this.state.query);
   };
 
   searchUsers = () => {
     this.getData();
   };
 
-  // the component renders a FlatList to display the list of users returned by the search query.
-  // The FlatList component receives the userList array as data and iterates through it to render each user's details.
-  // Each user is rendered as a View containing their given name, family name, and email.
-  // The keyExtractor function extracts the unique id field
-  // from each user object or uses the index as a fallback if the id field is not available.
+  renderUserItem = ({ item }) => (
+    <ListItem bottomDivider>
+      <Icon name="person" />
+      <ListItem.Content>
+        <ListItem.Title>{`${item.given_name} ${item.family_name}`}</ListItem.Title>
+        <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
+      </ListItem.Content>
+      <Button
+        title="Add to Contact"
+        onPress={() => this.addingContactHandler(item.user_id)}
+        buttonStyle={{ backgroundColor: '#007bff' }}
+        titleStyle={{ fontSize: 14 }}
+      />
+    </ListItem>
+  );
+
   render() {
     return (
-    // everything inside here
       <View>
         <TextInput
-          placeholder="search here"
+          placeholder="Search here"
           value={this.state.query}
           onChangeText={this.queryHandler}
         />
         <Button title="Search" onPress={this.searchUsers} />
+
         <FlatList
           data={this.state.userList}
-          renderItem={({ item }) => (
-            <View>
-              <Text>
-                {item.given_name}
-                {' '}
-                {item.family_name}
-              </Text>
-              <Text>{item.email}</Text>
-
-              <TouchableOpacity onPress={() => this.addingContactHandler(item.user_id)}>
-                <Text>Add  to Contact</Text>
-              </TouchableOpacity>
-              <Text>{this.state.message}</Text>
-            </View>
-          )}
+          renderItem={this.renderUserItem}
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
         />
 
-        <TouchableOpacity onPress={this.fetchPreviousPage}>
-          <Text>Previous</Text>
-        </TouchableOpacity>
+        <View style={styles.paginationContainer}>
+          <TouchableOpacity onPress={this.fetchPreviousPage}>
+            <Text style={styles.paginationButton}>Previous</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={this.fetchNewPage}>
-          <Text>Next</Text>
-        </TouchableOpacity>
-
+          <TouchableOpacity onPress={this.fetchNewPage}>
+            <Text style={styles.paginationButton}>Next</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
     );
   }
 }
+
+const styles = {
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  paginationButton: {
+    fontSize: 16,
+    color: '#007bff',
+  },
+};
