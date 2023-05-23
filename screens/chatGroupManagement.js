@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PatchChatName } from '../api/apiController';
 import { Button } from 'react-native-elements';
 import { ListItem } from 'react-native-elements';
-import { addUsertoChat,getContactLisData,getSingleChat } from '../api/apiController';
+import { addUsertoChat,getContactLisData,getSingleChat,deleteUserinChat } from '../api/apiController';
 
 export default class chatGroupManagement extends Component {
   constructor(props) {
@@ -36,6 +36,20 @@ export default class chatGroupManagement extends Component {
         ((err)=>{this.setState({error: err})})
     )
   }
+  
+  addUser = async(user_id) =>{
+     addUsertoChat(await AsyncStorage.getItem('chatID'), user_id, (()=>{
+      this.getChatData();
+    this.getContactData()}),
+    (()=>{}))
+  }
+
+  deletUser = async(user_id) =>{
+    deleteUserinChat(await AsyncStorage.getItem('chatID'), user_id, (()=>{
+     this.getChatData();
+   this.getContactData()}),
+   (()=>{}))
+ }
 
   render() {
     return (
@@ -70,8 +84,8 @@ export default class chatGroupManagement extends Component {
               <ListItem.Content>
                 <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                 <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
-                <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
-                  <Text style={{ color: 'red' }}>Block Contact</Text>
+                <TouchableOpacity onPress={() => this.addUser(item.user_id)}>
+                  <Text style={{ color: 'green' }}>Add Contact</Text>
                 </TouchableOpacity>
               </ListItem.Content>
               <ListItem.Chevron />

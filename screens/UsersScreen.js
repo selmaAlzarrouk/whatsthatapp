@@ -151,6 +151,7 @@ export default class UsersScreen extends Component {
             <Text style={styles.paginationButton}>Next</Text>
           </TouchableOpacity>
         </View>
+        <Text>{this.state.message}</Text>
       </View>
     );
   }
