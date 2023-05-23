@@ -64,8 +64,8 @@ export default class chatGroupManagement extends Component {
               <ListItem.Content>
                 <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                 <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
-                <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
-                  <Text style={{ color: 'red' }}>Block Contact</Text>
+                <TouchableOpacity onPress={() => this.deletUser(item.user_id)}>
+                  <Text style={{ color: 'red' }}>Delete Contact</Text>
                 </TouchableOpacity>
               </ListItem.Content>
               <ListItem.Chevron />
