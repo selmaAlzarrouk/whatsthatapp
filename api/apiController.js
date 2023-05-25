@@ -103,7 +103,7 @@ export const getSingleChat = async (chat_id, success, failure) => {
 export const getContactLisData = async (success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch('http://localhost:3333/api/1.0.0/contacts', {
-    method: 'GET',
+    method: 'GET', 
     headers: {
       'X-Authorization': token,
     },
@@ -328,6 +328,36 @@ export const userLogout = async (success, failure) => {
       failure(error);
     });
 };
+export const deleteUserinChat = async (chat_id,user_id, success, failure) => {
+  const token = await AsyncStorage.getItem('whatsthat_session_token');
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
+    method: 'delete',
+    headers: {
+      'X-Authorization': token,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return
+      } else if (response.status === 401) {
+        throw 'Unauthorised';
+      }else if (response.status === 403) {
+          throw 'Forbidden';       
+      } else if (response.status === 404) {
+        throw 'Not Found';
+      } else {
+        throw 'Server Error';
+      }
+    })
+    .then(() => {
+      success();
+      console.log('WEEWOO');
+    })
+    .catch((error) => {
+      failure(error);
+    });
+};
 export const deleteContact = async (user_id, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/contact`, {
@@ -392,14 +422,14 @@ export const addUsertoChat = async (chat_id, user_id, success, failure) => {
   return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
     method: 'POST',
     headers: {
+      
       'X-Authorization': token,
       'content-type': 'application/json',
     },
   })
   // handling the response
     .then((response) => {
-      if (response.status === 200) {
-        return
+      if (response.status === 201) {
 
       } else if (response.status === 400) {
         throw 'Bad';
@@ -409,36 +439,6 @@ export const addUsertoChat = async (chat_id, user_id, success, failure) => {
     })
     .then(() => {
       success();
-    })
-    .catch((error) => {
-      failure(error);
-    });
-};
-export const deleteUserinChat = async (chat_id,user_id, success, failure) => {
-  const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
-    method: 'delete',
-    headers: {
-      'X-Authorization': token,
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => {
-      if (response.status === 200) {
-        return
-      } else if (response.status === 401) {
-        throw 'Unauthorised';
-      }else if (response.status === 403) {
-          throw 'Forbidden';       
-      } else if (response.status === 404) {
-        throw 'Not Found';
-      } else {
-        throw 'Server Error';
-      }
-    })
-    .then(() => {
-      success();
-      console.log('WEEWOO');
     })
     .catch((error) => {
       failure(error);

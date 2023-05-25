@@ -15,6 +15,7 @@ import editChatName from './editChatName';
 import EditMessage from './EditMessage';
 import { editMessage } from '../api/apiController';
 import chatGroupManagement from './chatGroupManagement';
+import photoScreen from './photoScreen';
 // UI IMPORTS 
 //import { Icon } from 'react-native-elements';
 //import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,6 +33,7 @@ function ProfileStackNavigator() {
       screenOptions={{ headerShown: false }}
     >
       <ProfileStack.Screen name="Account" component={MyProfile} />
+      <ProfileStack.Screen name="Photo" component={photoScreen} />
     </ProfileStack.Navigator>
   );
 }

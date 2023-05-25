@@ -14,6 +14,7 @@ export default class UsersScreen extends Component {
       userList: [],
       message: '',
       user_id: 0,
+      offset: 0,
     };
   }
 
@@ -71,18 +72,18 @@ export default class UsersScreen extends Component {
   };
 
   fetchNewPage = () => {
-    const newOffset = this.state.offset + 3;
+    const newOffset = this.state.offset + 5;
     this.setState({ offset: newOffset }, () => this.getData());
   };
 
   fetchPreviousPage = () => {
-    const newOffset = this.state.offset - 3;
+    const newOffset = this.state.offset - 5;
     this.setState({ offset: newOffset }, () => this.getData());
   };
 
   async getData() {
     try {
-      const response = await fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=3&offset=${this.state.offset}`, {
+      const response = await fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=5&offset=${this.state.offset}`, {
         method: 'GET',
         headers: {
           'x-authorization': await AsyncStorage.getItem('whatsthat_session_token'),
