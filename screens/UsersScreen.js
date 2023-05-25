@@ -1,3 +1,5 @@
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Button, ListItem, Icon } from 'react-native-elements';
@@ -65,22 +67,6 @@ export default class UsersScreen extends Component {
     }
   }
 
-  addingContactHandler = (id) => {
-    this.setState({ user_id: id }, () => {
-      this.addContact();
-    });
-  };
-
-  fetchNewPage = () => {
-    const newOffset = this.state.offset + 5;
-    this.setState({ offset: newOffset }, () => this.getData());
-  };
-
-  fetchPreviousPage = () => {
-    const newOffset = this.state.offset - 5;
-    this.setState({ offset: newOffset }, () => this.getData());
-  };
-
   async getData() {
     try {
       const response = await fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=5&offset=${this.state.offset}`, {
@@ -102,6 +88,22 @@ export default class UsersScreen extends Component {
       console.log(error);
     }
   }
+
+  addingContactHandler = (id) => {
+    this.setState({ user_id: id }, () => {
+      this.addContact();
+    });
+  };
+
+  fetchNewPage = () => {
+    const newOffset = this.state.offset + 5;
+    this.setState({ offset: newOffset }, () => this.getData());
+  };
+
+  fetchPreviousPage = () => {
+    const newOffset = this.state.offset - 5;
+    this.setState({ offset: newOffset }, () => this.getData());
+  };
 
   queryHandler = (searchQuery) => {
     this.setState({ query: searchQuery });
