@@ -89,8 +89,7 @@ export default class ContactsScreen extends Component {
   render() {
     return (
       <View>
-        <Text>Hello World!!!</Text>
-  
+   
         <FlatList
           data={this.state.contactArr}
           renderItem={({ item }) => (
@@ -102,6 +101,7 @@ export default class ContactsScreen extends Component {
                 <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                 <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
                 <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
+                <Icon name="lock" type="font-awesome" color="red" />
                   <Text style={{ color: 'red' }}>Block Contact</Text>
                 </TouchableOpacity>
               </ListItem.Content>

@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
-import {
-  Text, View, TouchableOpacity,
-} from 'react-native';
-import {
-  Camera, CameraType, onCameraReady, CameraPictureOptions,
-} from 'expo-camera';
+import {  Text, View, TouchableOpacity} from 'react-native';
+import {  Camera, CameraType, onCameraReady, CameraPictureOptions,} from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Button, Icon } from 'react-native-elements';
 
 export default function CameraUtils() {
   const [type, setType] = useState(CameraType.back);
@@ -70,13 +67,16 @@ export default function CameraUtils() {
 
   return (
     <View style={{ height: '100vh' }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
+          Edit Your Photo:
+        </Text>
       <Camera type={type} ref={(ref) => setCamera(ref)}>
         <View style={{
-          display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignContent: 'center',
+          display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
         }}
         >
-          <TouchableOpacity onPress={takePicture} style={{ backgroundColor: '#3a75b5', width: 80 }}>
-            <Ionicons name="camera-outline" size="large" style={{ fontSize: 64 }} />
+          <TouchableOpacity onPress={takePicture} style={{ backgroundColor: '#007bff', width: 400, height: 200,alignItems: 'center', justifyContent:'center'}}>
+            <Ionicons name="camera" size="large" style={{alignSelf:'center', fontSize:200}} />
           </TouchableOpacity>
         </View>
       </Camera>

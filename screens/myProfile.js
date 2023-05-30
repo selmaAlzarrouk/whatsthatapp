@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,
+  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,ScrollView,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -124,7 +124,7 @@ export default class MyProfile extends Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.heading}>My Profile Info:</Text>
         {profilePhoto && (
         <Image source={{ uri: profilePhoto }} style={styles.profilePhoto} />
@@ -173,15 +173,13 @@ export default class MyProfile extends Component {
           containerStyle={styles.buttonContainer}
           buttonStyle={styles.logoutButton}
         />
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flex: 1,
+  container: { 
     alignItems: 'center',
     justifyContent: 'center',
   },
