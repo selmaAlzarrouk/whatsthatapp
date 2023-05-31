@@ -1,17 +1,47 @@
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Button,
+  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity,
 } from 'react-native';
-import { FlatList } from 'react-native-web';
-import { render } from 'react-dom';
+import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ContactList from '../components/ContactList';
 import { getSingleChat, getContactList, PatchChatName } from '../api/apiController';
 // import { Settings } from '@material-ui/icons';
 import { sendMessage } from '../api/apiController';
 import { deleteMessage } from '../api/apiController';
+import moment from 'moment';
+//UI imports:
 
+import { Button,Input } from 'react-native-elements';
 
+import { Ionicons } from '@expo/vector-icons';
+
+const ChatBubble = ({ message, timestamp, authorId, currentUser, loggedInUser }) => {
+  const isCurrentUser = authorId === currentUser;
+  const isMessageOwner = authorId === loggedInUser;
+
+  return (
+    <View
+      style={[
+        singleChatStyling.chatBubbleContainer,
+        isCurrentUser ? singleChatStyling.currentUserBubble : singleChatStyling.otherUserBubble,
+        !isMessageOwner && singleChatStyling.disabledBubble, // Apply disabled style if not the message owner
+      ]}
+    >
+      <View style={singleChatStyling.chatBubble}>
+        <Text style={[
+          singleChatStyling.messageText,
+          isCurrentUser ? singleChatStyling.currentUserMessageText : singleChatStyling.otherUserMessageText
+        ]}>
+          {message}
+        </Text>
+        <Text style={singleChatStyling.timestampText}>
+          {moment(timestamp).format('DD/MM/YYYY, h:mm a')}
+        </Text>
+      </View>
+    </View>
+  );
+};
 export default class singleChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -37,10 +67,16 @@ export default class singleChatScreen extends Component {
   }
 
   async getData() {
-    getSingleChat(
-      await AsyncStorage.getItem('chatID'),
-      ((response) => { this.setState({ chatData: response }); }),
-    );
+    const chatID = await AsyncStorage.getItem('chatID');
+    const user_id = parseInt(await AsyncStorage.getItem('user_id'));
+  
+    getSingleChat(chatID, (response) => {
+      this.setState({
+        chatData: response,
+        user_id: user_id,
+        isLoading: false,
+      });
+    });
   }
 
   messageHandler = (newMessage) => {
@@ -73,56 +109,132 @@ export default class singleChatScreen extends Component {
 
   render() {
     return (
-    // everything inside here
-      <View>
-        <Text>
-          {' '}
-          Welcome to
-          {' '}
-          {this.state.chatData.name}
+      <View style={singleChatStyling.container}>
+        <Text style={singleChatStyling.welcomeText}>
+          Welcome to {this.state.chatData.name}
         </Text>
-        <Button
-          title="Edit Chat Name"
-          onPress={() => { this.props.navigation.navigate('editChat'); }}
-        />
-        <Button
-          title="Edit Group Members"
-          onPress={() => { this.props.navigation.navigate('editMembers'); }}
-        />
-        <TextInput
-          placeholder="new Message"
+        <View style={singleChatStyling.buttonContainer}>
+          <Button
+            title="Edit Chat Name"
+            onPress={() => { this.props.navigation.navigate('editChat'); }}
+            buttonStyle={singleChatStyling.button}
+            titleStyle={singleChatStyling.buttonTitle}
+          />
+          <Button
+            title="Edit Group Members"
+            onPress={() => { this.props.navigation.navigate('editMembers'); }}
+            buttonStyle={singleChatStyling.button}
+            titleStyle={singleChatStyling.buttonTitle}
+          />
+        </View>
+  
+        <FlatList
+  data={this.state.chatData.messages}
+  renderItem={({ item }) => (
+    <View style={singleChatStyling.messageContainer}>
+      <ChatBubble  
+        message={item.message}
+      timestamp={item.timestamp}
+       isCurrentUser={item.author.id === this.state.user_id}
+      />
+      <TouchableOpacity
+        style={singleChatStyling.iconButton}
+        onPress={() => this.deleteMsg(item.message_id)}
+      >
+        <Ionicons name="trash" size={24} color="red" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={singleChatStyling.iconButton}
+        onPress={() => this.editMsg(item.message_id)}
+      >
+        <Ionicons name="create" size={24} color="black" />
+      </TouchableOpacity>
+    </View>
+  )}
+  keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
+/>
+  
+        <Input
+          placeholder="New Message"
           value={this.state.message}
           onChangeText={this.messageHandler}
+          rightIcon={
+            <TouchableOpacity onPress={this.sendMessage}>
+              <Ionicons name="send" size={24} color="blue" />
+            </TouchableOpacity>
+          }
         />
-        <TouchableOpacity onPress={this.sendMessage}>
-          <Text>sEND Message</Text>
-        </TouchableOpacity>
-
-        <FlatList
-          data={this.state.chatData.messages}
-          renderItem={({ item }) => (
-            <View>
-              <Text>
-                {item.message}
-                {' '}
-                {item.author.first_name}
-                {item.timestamp}
-              </Text>
-              <TouchableOpacity onPress={() => this.deleteMsg(item.message_id)}>
-                <Text>Delete Message</Text>
-
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.editMsg(item.message_id)}>
-                <Text>Edit Message</Text>
-              </TouchableOpacity>
-
-            </View>
-          )}
-          keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-        />
-
       </View>
-
     );
   }
+  
 }
+
+
+// Styles
+const singleChatStyling = {
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  welcomeText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+  },
+  buttonTitle: {
+    fontSize: 16,
+  },
+  messageContainer: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  chatBubbleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 8,
+  },
+  chatBubble: {
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    maxWidth: '70%', // Adjust this value to your preference
+  },
+  messageText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  timestampText: {
+    fontSize: 12,
+    color: '#000',
+    marginTop: 4,
+  },
+  currentUserBubble: {
+    backgroundColor: '#007AFF',
+    alignSelf: 'flex-start', // Align to the left for the current user
+  },
+  otherUserBubble: {
+    backgroundColor: '#00C853',
+    alignSelf: 'flex-end', // Align to the right for other users
+  },
+  currentUserMessageText: {
+    color: '#FFF',
+  },
+  otherUserMessageText: {
+    color: '#000',
+  },
+};
+
+
+
+
+

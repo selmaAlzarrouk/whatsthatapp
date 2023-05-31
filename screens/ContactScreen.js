@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //UI react native Elements : 
-import { ListItem } from 'react-native-elements';
+import { Icon, ListItem } from 'react-native-elements';
 import {
   ActivityIndicator, View, Text, StyleSheet, TextInput, TouchableOpacity, Button,
 } from 'react-native';
@@ -13,7 +13,6 @@ import { getContactLisData, getContactList, blockContact } from '../api/apiContr
 
 // import { getContactLisData } from "../api/apiController";
 import { deleteContact } from '../api/apiController';
-
 
 export default class ContactsScreen extends Component {
   constructor(props) {
