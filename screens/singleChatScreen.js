@@ -1,47 +1,22 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import { FlatList } from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
+import { Button, Input } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 import ContactList from '../components/ContactList';
-import { getSingleChat, getContactList, PatchChatName } from '../api/apiController';
+import {
+  getSingleChat, getContactList, PatchChatName, deleteMessage,
+} from '../api/apiController';
 // import { Settings } from '@material-ui/icons';
 import { sendMessage } from '../api/apiController';
-import { deleteMessage } from '../api/apiController';
-import moment from 'moment';
-//UI imports:
 
-import { Button,Input } from 'react-native-elements';
+// UI imports:
 
-import { Ionicons } from '@expo/vector-icons';
-
-const ChatBubble = ({ message, timestamp, authorId, currentUser, loggedInUser }) => {
-  const isCurrentUser = authorId === currentUser;
-  const isMessageOwner = authorId === loggedInUser;
-
-  return (
-    <View
-      style={[
-        singleChatStyling.chatBubbleContainer,
-        isCurrentUser ? singleChatStyling.currentUserBubble : singleChatStyling.otherUserBubble,
-        !isMessageOwner && singleChatStyling.disabledBubble, // Apply disabled style if not the message owner
-      ]}
-    >
-      <View style={singleChatStyling.chatBubble}>
-        <Text style={[
-          singleChatStyling.messageText,
-          isCurrentUser ? singleChatStyling.currentUserMessageText : singleChatStyling.otherUserMessageText
-        ]}>
-          {message}
-        </Text>
-        <Text style={singleChatStyling.timestampText}>
-          {moment(timestamp).format('DD/MM/YYYY, h:mm a')}
-        </Text>
-      </View>
-    </View>
-  );
-};
 export default class singleChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -68,12 +43,12 @@ export default class singleChatScreen extends Component {
 
   async getData() {
     const chatID = await AsyncStorage.getItem('chatID');
-    const user_id = parseInt(await AsyncStorage.getItem('user_id'));
-  
+    const uid = parseInt(await AsyncStorage.getItem('id'));
+
     getSingleChat(chatID, (response) => {
       this.setState({
         chatData: response,
-        user_id: user_id,
+        user_id: uid,
         isLoading: false,
       });
     });
@@ -94,24 +69,56 @@ export default class singleChatScreen extends Component {
 
   editMsg = async (messageID) => {
     await AsyncStorage.setItem('messageID', messageID);
-    this.props.navigation.navigate("editMessage");
-  }
+    this.props.navigation.navigate('editMessage');
+  };
 
-  
   deleteMsg = async (messageID) => {
-      deleteMessage(await AsyncStorage.getItem('chatID'),messageID,
-      (()=>{this.getData()}),
+    deleteMessage(
+      await AsyncStorage.getItem('chatID'),
+      messageID,
+      (() => { this.getData(); }),
       ((err) => {
         this.setState({ error: err });
-      }))
-      
-  }
+      }),
+    );
+  };
+
+  determineStyle = (id) => {
+    if (id === this.state.user_id) {
+      return singleChatStyling.currentUserBubble;
+    }
+
+    return singleChatStyling.otherUserBubble;
+  };
+
+  chatModification = (id, message_id) => {
+    if (id === this.state.user_id) {
+      return (
+        <View>
+          <TouchableOpacity
+            style={singleChatStyling.iconButton}
+            onPress={() => this.deleteMsg(message_id)}
+          >
+            <Ionicons name="trash" size={24} color="red" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={singleChatStyling.iconButton}
+            onPress={() => this.editMsg(message_id)}
+          >
+            <Ionicons name="create" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
 
   render() {
     return (
       <View style={singleChatStyling.container}>
         <Text style={singleChatStyling.welcomeText}>
-          Welcome to {this.state.chatData.name}
+          Welcome to
+          {' '}
+          {this.state.chatData.name}
         </Text>
         <View style={singleChatStyling.buttonContainer}>
           <Button
@@ -127,49 +134,38 @@ export default class singleChatScreen extends Component {
             titleStyle={singleChatStyling.buttonTitle}
           />
         </View>
-  
+
         <FlatList
-  data={this.state.chatData.messages}
-  renderItem={({ item }) => (
-    <View style={singleChatStyling.messageContainer}>
-      <ChatBubble  
-        message={item.message}
-      timestamp={item.timestamp}
-       isCurrentUser={item.author.id === this.state.user_id}
-      />
-      <TouchableOpacity
-        style={singleChatStyling.iconButton}
-        onPress={() => this.deleteMsg(item.message_id)}
-      >
-        <Ionicons name="trash" size={24} color="red" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={singleChatStyling.iconButton}
-        onPress={() => this.editMsg(item.message_id)}
-      >
-        <Ionicons name="create" size={24} color="black" />
-      </TouchableOpacity>
-    </View>
-  )}
-  keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-/>
-  
+          data={this.state.chatData.messages}
+          renderItem={({ item }) => (
+            <View>
+              <View style={this.determineStyle(item.author.user_id)}>
+                <Text>{item.message}</Text>
+                <Text style={singleChatStyling.timestampText}>
+                  {moment(item.timestamp).format('DD/MM/YYYY, h:mm a')}
+                  {' '}
+                </Text>
+              </View>
+              <View>{this.chatModification(item.author.user_id, item.message_id)}</View>
+            </View>
+          )}
+          keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
+        />
+
         <Input
           placeholder="New Message"
           value={this.state.message}
           onChangeText={this.messageHandler}
-          rightIcon={
+          rightIcon={(
             <TouchableOpacity onPress={this.sendMessage}>
               <Ionicons name="send" size={24} color="blue" />
             </TouchableOpacity>
-          }
+          )}
         />
       </View>
     );
   }
-  
 }
-
 
 // Styles
 const singleChatStyling = {
@@ -219,12 +215,26 @@ const singleChatStyling = {
     marginTop: 4,
   },
   currentUserBubble: {
-    backgroundColor: '#007AFF',
-    alignSelf: 'flex-start', // Align to the left for the current user
+    // goesleft design chat bubble
+    backgroundColor: '#0078fe',
+    padding: 10,
+    marginLeft: '45%',
+    borderRadius: 20,
+
+    marginTop: 5,
+    marginRight: '5%',
+    maxWidth: '50%',
+    alignSelf: 'flex-end',
   },
   otherUserBubble: {
-    backgroundColor: '#00C853',
-    alignSelf: 'flex-end', // Align to the right for other users
+    // goes Right design chat bubble
+    backgroundColor: '#dedede',
+    padding: 10,
+    marginTop: 5,
+    marginLeft: '5%',
+    maxWidth: '50%',
+    alignSelf: 'flex-start',
+    borderRadius: 30,
   },
   currentUserMessageText: {
     color: '#FFF',
@@ -233,8 +243,3 @@ const singleChatStyling = {
     color: '#000',
   },
 };
-
-
-
-
-
