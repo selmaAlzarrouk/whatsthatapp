@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,ScrollView,
+  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image, ScrollView,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +8,56 @@ import { Button } from '@rneui/base';
 import {
   getContactAccount, getAccountPhoto, PatchUserData, userLogout,
 } from '../api/apiController';
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heading: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  profilePhoto: {
+    width: 150,
+    height: 150,
+    marginBottom: 16,
+    borderRadius: 10,
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    marginTop: 16,
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 10,
+  },
+  buttonContainer: {
+    marginTop: 5,
+    width: '80%',
+  },
+  saveButton: {
+    backgroundColor: '#007bff',
+  },
+  logoutButton: {
+    backgroundColor: '#007bff',
+  },
+  message: {
+    marginTop: 16,
+    fontSize: 16,
+    color: 'green',
+  },
+});
+
 
 export default class MyProfile extends Component {
   constructor(props) {
@@ -67,7 +117,7 @@ export default class MyProfile extends Component {
     if (this.state.email !== this.state.userInfo.email) {
       dataToSend.first_name = this.state.email;
     }
-   
+
     PatchUserData(
       await AsyncStorage.getItem('id'),
       dataToSend,
@@ -81,7 +131,7 @@ export default class MyProfile extends Component {
   async sessionLogout() {
     userLogout(
       (() => {
-            this.props.navigation.navigate('SignIn');
+        this.props.navigation.navigate('SignIn');
       }),
       ((err) => {
         this.setState({ message: err });
@@ -177,51 +227,3 @@ export default class MyProfile extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: { 
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heading: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  profilePhoto: {
-    width: 150,
-    height: 150,
-    marginBottom: 16,
-    borderRadius: 10,
-  },
-  info: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  label: {
-    fontSize: 16,
-    marginTop: 16,
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-  },
-  buttonContainer: {
-    marginTop: 5,
-    width: '80%',
-  },
-  saveButton: {
-    backgroundColor: '#007bff',
-  },
-  logoutButton: {
-    backgroundColor: '#007bff',
-  },
-  message: {
-    marginTop: 16,
-    fontSize: 16,
-    color: 'green',
-  },
-});

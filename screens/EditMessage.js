@@ -1,8 +1,8 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,
+  View, Text, TextInput,
 } from 'react-native';
-import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import { editMessage } from '../api/apiController';
@@ -15,14 +15,21 @@ export default class EditMessage extends Component {
       error: '',
     };
   }
-  componentDidMount(){
-  this.prepopForm();
+
+  componentDidMount() {
+    this.prepopForm();
   }
-  async  prepopForm() {
+
+  editMessageHandler = (patchMessage) => {
+    this.setState({
+      message: patchMessage,
+    });
+  };
+
+  async prepopForm() {
     const prevMsg = await AsyncStorage.getItem('Message');
 
     this.setState({ message: prevMsg });
-
   }
 
   async patchMessage() {
@@ -38,12 +45,6 @@ export default class EditMessage extends Component {
       }),
     );
   }
-
-  editMessageHandler = (patchMessage) => {
-    this.setState({
-      message: patchMessage,
-    });
-  };
 
   render() {
     return (
