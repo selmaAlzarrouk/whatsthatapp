@@ -1,11 +1,12 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,
+  View, Text, TextInput,
 } from 'react-native';
-import { FlatList } from 'react-native-web';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PatchChatName } from '../api/apiController';
 import { Button } from 'react-native-elements';
+import { PatchChatName } from '../api/apiController';
 
 export default class editChatName extends Component {
   constructor(props) {
@@ -15,42 +16,43 @@ export default class editChatName extends Component {
       message: '',
     };
   }
-componentDidMount(){
-  this.prepopEditForm();
-}
-  async editChatName() {
-    PatchChatName(
-      await AsyncStorage.getItem('chatID'),
-      { name: this.state.chatName },
-      (() => {
-        this.setState({message: 'Chat Name Updated!'})
-      }),
-      ((err) => {
-        this.setState({ message: err });
-      }),
-    );
-  }
-  async  prepopEditForm() {
-    const prevChatName = await AsyncStorage.getItem('editChatName');
 
-    this.setState({ chatName: prevChatName });
-
+  componentDidMount() {
+    this.prepopEditForm();
   }
 
   updateChatNameHandler = (updateChatName) => {
     this.setState({
       chatName: updateChatName,
     });
-    console.log(this.state.chatName);
   };
+
+  async prepopEditForm() {
+    const prevChatName = await AsyncStorage.getItem('editChatName');
+
+    this.setState({ chatName: prevChatName });
+  }
+
+  async editChatName() {
+    PatchChatName(
+      await AsyncStorage.getItem('chatID'),
+      { name: this.state.chatName },
+      (() => {
+        this.setState({ message: 'Chat Name Updated!' });
+      }),
+      ((err) => {
+        this.setState({ message: err });
+      }),
+    );
+  }
 
   render() {
     return (
       <View>
         <TextInput
-        placeholder='Edit Chat Name...'
+          placeholder="Edit Chat Name..."
           value={this.state.chatName}
-          onChangeText={this. updateChatNameHandler}
+          onChangeText={this.updateChatNameHandler}
         />
 
         <Button

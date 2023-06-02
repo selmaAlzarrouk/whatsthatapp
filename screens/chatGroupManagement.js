@@ -1,24 +1,28 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image,
+  View, Text, TouchableOpacity,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PatchChatName } from '../api/apiController';
-import { Button } from 'react-native-elements';
 import { ListItem } from 'react-native-elements';
-import { addUsertoChat,getContactLisData,getSingleChat,deleteUserinChat } from '../api/apiController';
+
+import {
+  addUsertoChat, getContactLisData, getSingleChat, deleteUserinChat,
+} from '../api/apiController';
 
 export default class chatGroupManagement extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        chatData: [],
-        contactData: [],
+      chatData: [],
+      contactData: [],
+      error: '',
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getChatData();
     this.getContactData();
   }
@@ -32,28 +36,39 @@ export default class chatGroupManagement extends Component {
 
   async getContactData() {
     getContactLisData(
-        ((response)=>{this.setState({contactData: response})}),
-        ((err)=>{this.setState({error: err})})
-    )
-  }
-  
-  addUser = async(user_id) =>{
-     addUsertoChat(await AsyncStorage.getItem('chatID'), user_id, (()=>{
-      this.getChatData();
-    this.getContactData()}),
-    (()=>{}))
+      ((response) => { this.setState({ contactData: response }); }),
+      ((err) => { this.setState({ error: err }); }),
+    );
   }
 
-  deletUser = async(user_id) =>{
-    deleteUserinChat(await AsyncStorage.getItem('chatID'), user_id, (()=>{
-     this.getChatData();
-   this.getContactData()}),
-   (()=>{}))
- }
+  addUser = async (userId) => {
+    addUsertoChat(
+      await AsyncStorage.getItem('chatID'),
+      userId, (
+        () => {
+          this.getChatData();
+          this.getContactData();
+        }),
+      (() => {}),
+    );
+  };
+
+  deletUser = async (userId) => {
+    deleteUserinChat(
+      await AsyncStorage.getItem('chatID'),
+      userId, (
+        () => {
+          this.getChatData();
+          this.getContactData();
+        }),
+      (() => {}),
+    );
+  };
 
   render() {
     return (
       <View>
+        <Text>{this.state.error}</Text>
         <FlatList
           data={this.state.chatData.members}
           renderItem={({ item }) => (

@@ -2,23 +2,21 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 // UI react Native elements library:
-import { FontAwesome } from '@expo/vector-icons';
 import { Input, Button, ListItem } from 'react-native-elements';
-import {
-  ActivityIndicator, View, StyleSheet, Text, TouchableOpacity,
-} from 'react-native';
-import { TextInput, FlatList } from 'react-native-web';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import { View, Text } from 'react-native';
+import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ContactList from '../components/ContactList';
-import { getContactLisData, createChat, getListChats } from '../api/apiController';
+import { createChat } from '../api/apiController';
 
 export default class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
       chats: [],
       chatName: '',
+      error: '',
     };
   }
 
@@ -33,7 +31,6 @@ export default class ChatScreen extends Component {
   }
 
   async getData() {
-    console.log('Get Chats lol');
     const token = await AsyncStorage.getItem('whatsthat_session_token');
     return fetch('http://localhost:3333/api/1.0.0/chat', {
       method: 'get',
@@ -48,20 +45,20 @@ export default class ChatScreen extends Component {
           const error = 'unauthorised';
           throw error;
         } else {
-          throw 'Server Error';
+          const err = 'Server Error';
+          throw err;
         }
       })
       .then((responseJson) => {
         this.setState({ chats: responseJson });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        this.setState({ error: err });
       });
   }
 
   createChatHandler = (newChatInstance) => {
     this.setState({ chatName: newChatInstance });
-    console.log(this.state.chatName);
   };
 
   createChat = () => {
@@ -79,6 +76,9 @@ export default class ChatScreen extends Component {
   render() {
     return (
       <View>
+        <Text>
+          {this.state.error}
+        </Text>
         <Input
           placeholder="Create new chat"
           value={this.state.chatName}

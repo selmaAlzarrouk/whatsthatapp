@@ -1,18 +1,16 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-//UI react native Elements : 
+// UI react native Elements :
 import { Icon, ListItem } from 'react-native-elements';
 import {
-  ActivityIndicator, View, Text, StyleSheet, TextInput, TouchableOpacity, Button,
+  View, Text, TouchableOpacity,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
-import { render } from 'react-dom';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ContactList from '../components/ContactList';
-import { getContactLisData, getContactList, blockContact } from '../api/apiController';
-// import { Settings } from '@material-ui/icons';
-
-// import { getContactLisData } from "../api/apiController";
-import { deleteContact } from '../api/apiController';
+import {
+  blockContact, deleteContact,
+} from '../api/apiController';
 
 export default class ContactsScreen extends Component {
   constructor(props) {
@@ -20,6 +18,7 @@ export default class ContactsScreen extends Component {
     /* */ this.state = {
       contactArr: [],
       message: '',
+      error: '',
 
     };
   }
@@ -27,7 +26,6 @@ export default class ContactsScreen extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', async () => {
       this.getData();
-      console.log('Contact Screen Reached!');
     });
   }
 
@@ -48,17 +46,18 @@ export default class ContactsScreen extends Component {
         if (response.status === 200) {
           return response.json();
         } if (response.status === 401) {
-          throw ' Unauthorised';
+          const err = 'unauthorised';
+          throw err;
         } else {
-          throw 'Server Error';
+          const e = 'Server Error';
+          throw e;
         }
       })
       .then((responseJson) => {
         this.setState({ contactArr: responseJson });
       })
-      .catch((error) => {
-        // failure(error);
-        console.log(error);
+      .catch((err) => {
+        this.setState({ error: err });
       });
   }
 
@@ -88,7 +87,7 @@ export default class ContactsScreen extends Component {
   render() {
     return (
       <View>
-   
+        <Text>{this.state.error}</Text>
         <FlatList
           data={this.state.contactArr}
           renderItem={({ item }) => (
@@ -100,7 +99,7 @@ export default class ContactsScreen extends Component {
                 <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                 <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
                 <TouchableOpacity onPress={() => this.blockContactHandler(item.user_id)}>
-                <Icon name="lock" type="font-awesome" color="red" />
+                  <Icon name="lock" type="font-awesome" color="red" />
                   <Text style={{ color: 'red' }}>Block Contact</Text>
                 </TouchableOpacity>
               </ListItem.Content>
@@ -113,4 +112,4 @@ export default class ContactsScreen extends Component {
       </View>
     );
   }
-}  
+}
