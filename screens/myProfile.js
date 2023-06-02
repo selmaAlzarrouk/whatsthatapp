@@ -67,7 +67,7 @@ export default class MyProfile extends Component {
     if (this.state.email !== this.state.userInfo.email) {
       dataToSend.first_name = this.state.email;
     }
-    console.log(dataToSend);
+   
     PatchUserData(
       await AsyncStorage.getItem('id'),
       dataToSend,
@@ -81,8 +81,7 @@ export default class MyProfile extends Component {
   async sessionLogout() {
     userLogout(
       (() => {
-        console.log('This is working');
-        this.props.navigation.navigate('SignIn');
+            this.props.navigation.navigate('SignIn');
       }),
       ((err) => {
         this.setState({ message: err });

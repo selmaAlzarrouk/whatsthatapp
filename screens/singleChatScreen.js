@@ -67,10 +67,12 @@ export default class singleChatScreen extends Component {
     );
   };
 
-  editMsg = async (messageID) => {
+  editMsg = async (messageID,message) => {
     await AsyncStorage.setItem('messageID', messageID);
+    await AsyncStorage.setItem('Message' , message);
     this.props.navigation.navigate('editMessage');
   };
+
 
   deleteMsg = async (messageID) => {
     deleteMessage(
@@ -91,7 +93,8 @@ export default class singleChatScreen extends Component {
     return singleChatStyling.otherUserBubble;
   };
 
-  chatModification = (id, message_id) => {
+
+  chatModification = (id, message_id,Message) => {
     if (id === this.state.user_id) {
       return (
         <View>
@@ -103,13 +106,19 @@ export default class singleChatScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={singleChatStyling.iconButton}
-            onPress={() => this.editMsg(message_id)}
+            onPress={() => this.editMsg(message_id,Message)}
           >
             <Ionicons name="create" size={24} color="black" />
           </TouchableOpacity>
         </View>
       );
     }
+  };
+
+  editChatName = async (editChatName) => {
+    await AsyncStorage.setItem('editChatName',editChatName);
+    
+    this.props.navigation.navigate('editChat');
   };
 
   render() {
@@ -123,7 +132,7 @@ export default class singleChatScreen extends Component {
         <View style={singleChatStyling.buttonContainer}>
           <Button
             title="Edit Chat Name"
-            onPress={() => { this.props.navigation.navigate('editChat'); }}
+            onPress={() => { this.editChatName(this.state.chatData.name) }}
             buttonStyle={singleChatStyling.button}
             titleStyle={singleChatStyling.buttonTitle}
           />
@@ -146,7 +155,7 @@ export default class singleChatScreen extends Component {
                   {' '}
                 </Text>
               </View>
-              <View>{this.chatModification(item.author.user_id, item.message_id)}</View>
+              <View>{this.chatModification(item.author.user_id, item.message_id, item.message)}</View>
             </View>
           )}
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}

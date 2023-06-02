@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable linebreak-style */
 import React, { Component } from 'react';
@@ -6,9 +7,8 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 // import { Settings } from '@material-ui/icons';
-//UI react native cwk 10%
+// UI react native cwk 10%
 import { Icon, ListItem } from 'react-native-elements';
-
 
 import {
   getBlockedContacts, unblockContact,
@@ -38,7 +38,7 @@ export default class BlockedScreen extends Component {
 
   getData() {
     getBlockedContacts(((responseJson) => {
-      this.setState({ blockedArr: responseJson }, () => { console.log(this.state.blockedArr); });
+      this.setState({ blockedArr: responseJson });
     }));
   }
 
@@ -47,7 +47,7 @@ export default class BlockedScreen extends Component {
       id,
       (() => {
         this.getData();
-        this.setState({ message: 'Contact has been deleted' });
+        this.setState({ message: 'Contact has been unblocked' });
       }),
     );
   };
@@ -56,15 +56,14 @@ export default class BlockedScreen extends Component {
     return (
       <View>
         <Text>Blocked Contacts:</Text>
-  
+
         <FlatList
           data={this.state.blockedArr}
           renderItem={({ item }) => (
             <ListItem
-              onPress={() => this.unblockContactHandler(item.user_id)}
               bottomDivider
             >
-              <Icon name="lock" type="font-awesome" color="red" />
+              <Icon name="lock" type="font-awesome" color="green" />
               <ListItem.Content>
                 <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                 <TouchableOpacity onPress={() => this.unblockContactHandler(item.user_id)}>
@@ -80,4 +79,4 @@ export default class BlockedScreen extends Component {
       </View>
     );
   }
-}  
+}

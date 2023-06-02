@@ -67,7 +67,7 @@ export default class UsersScreen extends Component {
     }
   }
 
-  async getData() {
+  async getData(success) {
     try {
       const response = await fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=5&offset=${this.state.offset}`, {
         method: 'GET',
@@ -81,6 +81,7 @@ export default class UsersScreen extends Component {
         this.setState({
           userList: responseJson,
         });
+        success();
       } else {
         throw 'Error fetching data';
       }
@@ -110,7 +111,14 @@ export default class UsersScreen extends Component {
   };
 
   searchUsers = () => {
-    this.getData();
+    this.getData(() => {
+      if(this.state.userList.length == 0){
+        this.setState({message: "No users"})
+      }else{
+        this.setState({message: ''})
+      }
+    }
+    );
   };
 
   renderUserItem = ({ item }) => (

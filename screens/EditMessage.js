@@ -15,6 +15,15 @@ export default class EditMessage extends Component {
       error: '',
     };
   }
+  componentDidMount(){
+  this.prepopForm();
+  }
+  async  prepopForm() {
+    const prevMsg = await AsyncStorage.getItem('Message');
+
+    this.setState({ message: prevMsg });
+
+  }
 
   async patchMessage() {
     editMessage(
@@ -22,7 +31,6 @@ export default class EditMessage extends Component {
       await AsyncStorage.getItem('messageID'),
       { message: this.state.message },
       (() => {
-        console.log('This is working');
         this.setState({ error: 'Message Updated!' });
       }),
       ((err) => {

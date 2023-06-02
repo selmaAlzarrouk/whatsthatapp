@@ -15,19 +15,26 @@ export default class editChatName extends Component {
       message: '',
     };
   }
-
+componentDidMount(){
+  this.prepopEditForm();
+}
   async editChatName() {
     PatchChatName(
       await AsyncStorage.getItem('chatID'),
       { name: this.state.chatName },
       (() => {
-        console.log('This is working');
         this.setState({message: 'Chat Name Updated!'})
       }),
       ((err) => {
         this.setState({ message: err });
       }),
     );
+  }
+  async  prepopEditForm() {
+    const prevChatName = await AsyncStorage.getItem('editChatName');
+
+    this.setState({ chatName: prevChatName });
+
   }
 
   updateChatNameHandler = (updateChatName) => {
