@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, View, StyleSheet, Text, TextInput, TouchableOpacity, Image, ScrollView,
+  StyleSheet, Text, TextInput, Image, ScrollView,
 } from 'react-native';
-import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from '@rneui/base';
 import {
@@ -58,7 +59,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default class MyProfile extends Component {
   constructor(props) {
     super(props);
@@ -71,22 +71,17 @@ export default class MyProfile extends Component {
       profilePhoto: [],
 
     };
-    this.GeneratePatchData = this.GeneratePatchData.bind(this); // this types thiw binds to this period
+    this.GeneratePatchData = this.GeneratePatchData.bind(this);
     this.sessionLogout = this.sessionLogout.bind(this);
   }
 
-  firstnameHandler = (updateFirstname) => {
-    this.setState({
-      firstname: updateFirstname,
-    });
-    console.log(this.state.firstname);
-  };
-
-  lastnameHandler = (updateLastname) => {
-    this.setState({
-      lastname: updateLastname,
-    });
-  };
+  async getData() {
+    getContactAccount(await AsyncStorage.getItem('id'), ((respJson) => {
+      this.setState({
+        userInfo: respJson,
+      }, () => { this.polyfillUpdateForm(); });
+    }));
+  }
 
   emailHandler = (updateEmail) => {
     this.setState({
@@ -94,20 +89,51 @@ export default class MyProfile extends Component {
     });
   };
 
-  polyfillUpdateForm() {
-    const updateFirstname = this.state.userInfo.first_name;
-    const updateLastname = this.state.userInfo.last_name;
-    const updateEmail = this.state.userInfo.email;
 
-    this.setState({ firstname: updateFirstname });
-    this.setState({ lastname: updateLastname });
-    this.setState({ email: updateEmail });
+  async sessionLogout() {
+    userLogout(
+      (() => {
+        this.props.navigation.navigate('SignIn');
+      }),
+      ((err) => {
+        this.setState({ message: err });
+      }),
+    );
   }
+
+  async componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.getData();
+      this.getAccountPicture();
+    });
+  }
+
+  componentWillUnmount() {
+
+  }
+
+  async getAccountPicture() {
+    getAccountPhoto(await AsyncStorage.getItem('id'), ((responseblob) => {
+      this.setState({
+        profilePhoto: window.URL.createObjectURL(responseblob),
+      }, () => { console.log(responseblob); });
+    }));
+  }
+
+  lastnameHandler = (updateLastname) => {
+    this.setState({
+      lastname: updateLastname,
+    });
+  };
+
+  firstnameHandler = (updateFirstname) => {
+    this.setState({
+      firstname: updateFirstname,
+    });
+  };
 
   async GeneratePatchData() {
     const dataToSend = {};
-    // the json gets sent to the server
-    // the value stored in the first name state compae it OG data  if not the same then just add the new value into this const dataToSend
     if (this.state.firstname !== this.state.userInfo.first_name) {
       dataToSend.first_name = this.state.firstname;
     }
@@ -128,43 +154,14 @@ export default class MyProfile extends Component {
     );
   }
 
-  async sessionLogout() {
-    userLogout(
-      (() => {
-        this.props.navigation.navigate('SignIn');
-      }),
-      ((err) => {
-        this.setState({ message: err });
-      }),
-    );
-  }
+  polyfillUpdateForm() {
+    const updateFirstname = this.state.userInfo.first_name;
+    const updateLastname = this.state.userInfo.last_name;
+    const updateEmail = this.state.userInfo.email;
 
-  async getAccountPicture() {
-    getAccountPhoto(await AsyncStorage.getItem('id'), ((responseblob) => {
-      this.setState({
-        profilePhoto: window.URL.createObjectURL(responseblob),
-
-      }, () => { console.log(responseblob); });
-    }));
-  }
-
-  async getData() {
-    getContactAccount(await AsyncStorage.getItem('id'), ((respJson) => {
-      this.setState({
-        userInfo: respJson,
-      }, () => { this.polyfillUpdateForm(); });
-    }));
-  }
-
-  async componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.getData();
-      this.getAccountPicture();
-    });
-  }
-
-  componentWillUnmount() {
-
+    this.setState({ firstname: updateFirstname });
+    this.setState({ lastname: updateLastname });
+    this.setState({ email: updateEmail });
   }
 
   render() {
@@ -226,4 +223,3 @@ export default class MyProfile extends Component {
     );
   }
 }
-
