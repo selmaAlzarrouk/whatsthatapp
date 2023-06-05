@@ -91,6 +91,7 @@ class SignIn extends Component {
         <Text style={styles.title}>Sign In</Text>
         <Image
           style={styles.logo}
+          // eslint-disable-next-line global-require
           source={require('../assets/whatsThatLogo.png')}
         />
 

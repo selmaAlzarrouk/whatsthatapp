@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
@@ -75,32 +76,6 @@ export default class MyProfile extends Component {
     this.sessionLogout = this.sessionLogout.bind(this);
   }
 
-  async getData() {
-    getContactAccount(await AsyncStorage.getItem('id'), ((respJson) => {
-      this.setState({
-        userInfo: respJson,
-      }, () => { this.polyfillUpdateForm(); });
-    }));
-  }
-
-  emailHandler = (updateEmail) => {
-    this.setState({
-      email: updateEmail,
-    });
-  };
-
-
-  async sessionLogout() {
-    userLogout(
-      (() => {
-        this.props.navigation.navigate('SignIn');
-      }),
-      ((err) => {
-        this.setState({ message: err });
-      }),
-    );
-  }
-
   async componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.getData();
@@ -109,16 +84,30 @@ export default class MyProfile extends Component {
   }
 
   componentWillUnmount() {
+    this.unsubscribe();
+  }
 
+  async getData() {
+    getContactAccount(await AsyncStorage.getItem('id'), ((respJson) => {
+      this.setState({
+        userInfo: respJson,
+      }, () => { this.polyfillUpdateForm(); });
+    }));
   }
 
   async getAccountPicture() {
     getAccountPhoto(await AsyncStorage.getItem('id'), ((responseblob) => {
       this.setState({
         profilePhoto: window.URL.createObjectURL(responseblob),
-      }, () => { console.log(responseblob); });
+      }, () => {});
     }));
   }
+
+  emailHandler = (updateEmail) => {
+    this.setState({
+      email: updateEmail,
+    });
+  };
 
   lastnameHandler = (updateLastname) => {
     this.setState({
@@ -131,6 +120,17 @@ export default class MyProfile extends Component {
       firstname: updateFirstname,
     });
   };
+
+  async sessionLogout() {
+    userLogout(
+      (() => {
+        this.props.navigation.navigate('SignIn');
+      }),
+      ((err) => {
+        this.setState({ message: err });
+      }),
+    );
+  }
 
   async GeneratePatchData() {
     const dataToSend = {};

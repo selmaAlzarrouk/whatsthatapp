@@ -1,12 +1,25 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
+import {
+  View, TextInput, FlatList, Text, TouchableOpacity,
+} from 'react-native';
 import { Button, ListItem, Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import { getContactList } from '../api/apiController';
+const styles = {
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  paginationButton: {
+    fontSize: 16,
+    color: '#007bff',
+  },
+};
 
 export default class UsersScreen extends Component {
   constructor(props) {
@@ -22,49 +35,12 @@ export default class UsersScreen extends Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      console.log('Screen reached');
       this.getData();
-      getContactList()
-        .then((responseJson) => {
-          this.setState({
-            contactData: responseJson,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-  }
-
-  async addContact() {
-    try {
-      const token = await AsyncStorage.getItem('whatsthat_session_token');
-      const response = await fetch(`http://localhost:3333/api/1.0.0/user/${this.state.user_id}/contact`, {
-        method: 'post',
-        headers: {
-          'x-authorization': token,
-        },
-      });
-
-      if (response.status === 200) {
-        this.setState({ message: 'Added to Contacts' });
-        return;
-      } else if (response.status === 400) {
-        throw 'You can\'t add yourself as a contact';
-      } else if (response.status === 401) {
-        throw 'Unauthorized';
-      } else if (response.status === 404) {
-        throw 'Not Found';
-      } else if (response.status === 500) {
-        throw 'Server Error';
-      }
-    } catch (error) {
-      this.setState({ message: error });
-    }
   }
 
   async getData(success) {
@@ -112,14 +88,44 @@ export default class UsersScreen extends Component {
 
   searchUsers = () => {
     this.getData(() => {
-      if(this.state.userList.length == 0){
-        this.setState({message: "No users"})
-      }else{
-        this.setState({message: ''})
+      if (this.state.userList.length == 0) {
+        this.setState({ message: 'No users' });
+      } else {
+        this.setState({ message: '' });
       }
-    }
-    );
+    });
   };
+
+  async addContact() {
+    try {
+      const token = await AsyncStorage.getItem('whatsthat_session_token');
+      const response = await fetch(`http://localhost:3333/api/1.0.0/user/${this.state.user_id}/contact`, {
+        method: 'post',
+        headers: {
+          'x-authorization': token,
+        },
+      });
+
+      if (response.status === 200) {
+        this.setState({ message: 'Added to Contacts' });
+        return;
+      } if (response.status === 400) {
+        const error = 'You can\'t add yourself as a contact';
+        throw error;
+      } else if (response.status === 401) {
+        const err = 'Unauthorized';
+        throw err;
+      } else if (response.status === 404) {
+        const e = 'Not Found';
+        throw e;
+      } else if (response.status === 500) {
+        const error = 'Server Error';
+        throw error;
+      }
+    } catch (error) {
+      this.setState({ message: error });
+    }
+  }
 
   renderUserItem = ({ item }) => (
     <ListItem bottomDivider>
@@ -140,6 +146,7 @@ export default class UsersScreen extends Component {
   render() {
     return (
       <View>
+        <Text>{this.state.error}</Text>
         <TextInput
           placeholder="Search here"
           value={this.state.query}
@@ -167,15 +174,3 @@ export default class UsersScreen extends Component {
     );
   }
 }
-
-const styles = {
-  paginationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  paginationButton: {
-    fontSize: 16,
-    color: '#007bff',
-  },
-};
