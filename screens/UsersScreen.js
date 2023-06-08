@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import { Button, ListItem, Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = {
   paginationContainer: {

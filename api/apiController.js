@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // Below will be all the api functions
 // ensure modular and Clean Code base architecure
 
@@ -15,9 +14,7 @@ export const getContactList = async () => {
   })
     .then((response) => response.json())
     .then((responseJson) => responseJson)
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => error);
 };
 
 export const userLogsin = async (data, success, failure) => fetch('http://localhost:3333/api/1.0.0/login', {
@@ -32,9 +29,11 @@ export const userLogsin = async (data, success, failure) => fetch('http://localh
     if (response.status === 200) {
       return response.json();
     } if (response.status === 400) {
-      throw 'Invalid use of Email / password you have supplied';
+      const newError = 'Invalid use of Email / password you have supplied';
+      throw newError;
     } else {
-      throw 'Server Error';
+      const newError = 'Server Error';
+      throw newError;
     }
   })
   .then((responseJson) => {
@@ -44,9 +43,9 @@ export const userLogsin = async (data, success, failure) => fetch('http://localh
     failure(error);
   });
 
-export const getContactAccount = async (user_id, success, failure) => {
+export const getContactAccount = async (userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}`, {
     method: 'GET',
     headers: {
 
@@ -58,11 +57,14 @@ export const getContactAccount = async (user_id, success, failure) => {
       if (response.status === 200) {
         return response.json();
       } if (response.status === 401) {
-        throw 'Unauthroised';
+        const newError = 'Unauthroised';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseJson) => {
@@ -72,9 +74,9 @@ export const getContactAccount = async (user_id, success, failure) => {
       failure(error);
     });
 };
-export const getSingleChat = async (chat_id, success, failure) => {
+export const getSingleChat = async (chatId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}`, {
     method: 'GET',
     headers: {
       'X-Authorization': token,
@@ -84,11 +86,14 @@ export const getSingleChat = async (chat_id, success, failure) => {
       if (response.status === 200) {
         return response.json();
       } if (response.status === 403) {
-        throw ' Forbidden';
+        const error = 'Forbidden';
+        throw error;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const error = 'Not Found';
+        throw error;
       } else {
-        throw 'Server Error';
+        const error = 'Server Error';
+        throw error;
       }
     })
     .then((responseJson) => {
@@ -103,7 +108,7 @@ export const getSingleChat = async (chat_id, success, failure) => {
 export const getContactLisData = async (success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
   return fetch('http://localhost:3333/api/1.0.0/contacts', {
-    method: 'GET', 
+    method: 'GET',
     headers: {
       'X-Authorization': token,
     },
@@ -112,9 +117,11 @@ export const getContactLisData = async (success, failure) => {
       if (response.status === 200) {
         return response.json();
       } if (response.status === 401) {
-        throw ' Unauthorised';
+        const error = 'Unauthorised';
+        throw error;
       } else {
-        throw 'Server Error';
+        const error = 'Sever Error';
+        throw error;
       }
     })
     .then((responseJson) => {
@@ -137,9 +144,11 @@ export const getListChats = async (success, failure) => {
       if (response.status === 200) {
         return response.json();
       } if (response.status === 401) {
-        throw ' Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseJson) => {
@@ -162,9 +171,11 @@ export const getBlockedContacts = async (success, failure) => {
       if (response.status === 200) {
         return response.json();
       } if (response.status === 401) {
-        throw ' Unauthorised';
+        const err = 'Unauthorised';
+        throw err;
       } else {
-        throw 'Server Error';
+        const err = 'Server Error';
+        throw err;
       }
     })
     .then((responseJson) => {
@@ -175,10 +186,10 @@ export const getBlockedContacts = async (success, failure) => {
     });
 };
 
-export const sendMessage = async (chat_id, mssg, success, failure) => {
+export const sendMessage = async (chatId, mssg, success, failure) => {
   const data = { message: mssg };
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/message/`, {
     method: 'POST',
     headers: {
       'X-Authorization': token,
@@ -188,17 +199,22 @@ export const sendMessage = async (chat_id, mssg, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw ' Bad Request';
+        return response;
+      } if (response.status === 400) {
+        const newError = ' Bad Request';
+        throw newError;
       } else if (response.status === 401) {
-        throw ' Unauthorised';
+        const newError = ' Unauthorised';
+        throw newError;
       } else if (response.status === 403) {
-        throw ' Forbidden';
+        const newError = 'Forbidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw ' Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -209,9 +225,9 @@ export const sendMessage = async (chat_id, mssg, success, failure) => {
     });
 };
 
-export const blockContact = async (user_id, success, failure) => {
+export const blockContact = async (userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/block`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/block`, {
     method: 'POST',
     headers: {
       'X-Authorization': token,
@@ -219,15 +235,19 @@ export const blockContact = async (user_id, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw " You Can't Block yourself";
+        return response;
+      } if (response.status === 400) {
+        const newError = 'You Cannot Block yourself';
+        throw newError;
       } else if (response.status === 401) {
-        throw ' Unauthorised';
+        const newError = ' Unauthorised';
+        throw newError;
       } else if (response.status === 404) {
-        throw ' Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -238,9 +258,9 @@ export const blockContact = async (user_id, success, failure) => {
     });
 };
 
-export const unblockContact = async (user_id, success, failure) => {
+export const unblockContact = async (userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/block`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/block`, {
     method: 'delete',
     headers: {
       'X-Authorization': token,
@@ -249,15 +269,19 @@ export const unblockContact = async (user_id, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'You cannot  Block yourself';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'You CannotBlock yourself';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -268,9 +292,9 @@ export const unblockContact = async (user_id, success, failure) => {
     });
 };
 
-export const PatchUserData = async (user_id, data, success, failure) => {
+export const PatchUserData = async (userId, data, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}`, {
     method: 'PATCH',
     headers: {
       'X-Authorization': token,
@@ -280,17 +304,22 @@ export const PatchUserData = async (user_id, data, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'Something Went Wrong, please check your input again';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Something Went Wrong, please check your input again';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 403) {
-        throw 'Forbidden';
+        const newError = 'Fobidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseJson) => {
@@ -314,11 +343,13 @@ export const userLogout = async (success, failure) => {
   // handling the response
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 401) {
-        throw 'Unauthorized';
+        return response;
+      } if (response.status === 401) {
+        const newError = 'Unauthorised';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -328,9 +359,9 @@ export const userLogout = async (success, failure) => {
       failure(error);
     });
 };
-export const deleteUserinChat = async (chat_id,user_id, success, failure) => {
+export const deleteUserinChat = async (chatId, userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/user/${userId}`, {
     method: 'delete',
     headers: {
       'X-Authorization': token,
@@ -339,28 +370,31 @@ export const deleteUserinChat = async (chat_id,user_id, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-        return
-      } else if (response.status === 401) {
-        throw 'Unauthorised';
-      }else if (response.status === 403) {
-          throw 'Forbidden';       
+        return response;
+      } if (response.status === 401) {
+        const newError = 'Unauthorised';
+        throw newError;
+      } else if (response.status === 403) {
+        const newError = 'Forbidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
       success();
-      console.log('WEEWOO');
     })
     .catch((error) => {
       failure(error);
     });
 };
-export const deleteContact = async (user_id, success, failure) => {
+export const deleteContact = async (userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/contact`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/contact`, {
     method: 'delete',
     headers: {
       'X-Authorization': token,
@@ -369,20 +403,23 @@ export const deleteContact = async (user_id, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'You cannot remove yourself as a user';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'You cannot remove yourself as a user';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
       success();
-      console.log('WEEWOO');
     })
     .catch((error) => {
       failure(error);
@@ -403,11 +440,13 @@ export const createChat = async (chatName, success, failure) => {
   // handling the response
     .then((response) => {
       if (response.status === 201) {
-
-      } else if (response.status === 400) {
-        throw 'Bad';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Bad';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -417,12 +456,12 @@ export const createChat = async (chatName, success, failure) => {
       failure(error);
     });
 };
-export const addUsertoChat = async (chat_id, user_id, success, failure) => {
+export const addUsertoChat = async (chatId, userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/user/${user_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/user/${userId}`, {
     method: 'POST',
     headers: {
-      
+
       'X-Authorization': token,
       'content-type': 'application/json',
     },
@@ -430,11 +469,13 @@ export const addUsertoChat = async (chat_id, user_id, success, failure) => {
   // handling the response
     .then((response) => {
       if (response.status === 201) {
-
-      } else if (response.status === 400) {
-        throw 'Bad';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Bad';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
@@ -445,9 +486,9 @@ export const addUsertoChat = async (chat_id, user_id, success, failure) => {
     });
 };
 
-export const getAccountPhoto = async (user_id, success, failure) => {
+export const getAccountPhoto = async (userId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/photo`, {
+  return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/photo`, {
     method: 'GET',
     headers: {
 
@@ -458,11 +499,14 @@ export const getAccountPhoto = async (user_id, success, failure) => {
       if (response.status === 200) {
         return response.blob();
       } if (response.status === 401) {
-        throw 'Unauthroised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseblob) => {
@@ -473,9 +517,9 @@ export const getAccountPhoto = async (user_id, success, failure) => {
     });
 };
 
-export const PatchChatName = async (chat_id, data, success, failure) => {
+export const PatchChatName = async (chatId, data, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}`, {
     method: 'PATCH',
     headers: {
       'X-Authorization': token,
@@ -485,17 +529,22 @@ export const PatchChatName = async (chat_id, data, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'Something Went Wrong, please check your input again';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Something Went Wrong, please check your input again';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 403) {
-        throw 'Forbidden';
+        const newError = 'Forbidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseJson) => {
@@ -506,9 +555,9 @@ export const PatchChatName = async (chat_id, data, success, failure) => {
     });
 };
 
-export const deleteMessage = async (chat_id, message_id, success, failure) => {
+export const deleteMessage = async (chatId, messageId, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/message/${messageId}`, {
     method: 'delete',
     headers: {
       'X-Authorization': token,
@@ -517,31 +566,35 @@ export const deleteMessage = async (chat_id, message_id, success, failure) => {
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'Bad Request';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Bad Request';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 403) {
-        throw 'Forbidden';
+        const newError = 'Forbidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then(() => {
       success();
-      console.log('WEEWOO');
     })
     .catch((error) => {
       failure(error);
     });
 };
 
-export const editMessage = async (chat_id, message_id, data, success, failure) => {
+export const editMessage = async (chatId, messageId, data, success, failure) => {
   const token = await AsyncStorage.getItem('whatsthat_session_token');
-  return fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`, {
+  return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/message/${messageId}`, {
     method: 'PATCH',
     headers: {
       'X-Authorization': token,
@@ -551,17 +604,22 @@ export const editMessage = async (chat_id, message_id, data, success, failure) =
   })
     .then((response) => {
       if (response.status === 200) {
-
-      } else if (response.status === 400) {
-        throw 'Something Went Wrong, please check your input again';
+        return response;
+      } if (response.status === 400) {
+        const newError = 'Something Went Wrong, please check your input again';
+        throw newError;
       } else if (response.status === 401) {
-        throw 'Unauthorised';
+        const newError = 'Unauthorised';
+        throw newError;
       } else if (response.status === 403) {
-        throw 'Forbidden';
+        const newError = 'Forbidden';
+        throw newError;
       } else if (response.status === 404) {
-        throw 'Not Found';
+        const newError = 'Not Found';
+        throw newError;
       } else {
-        throw 'Server Error';
+        const newError = 'Server Error';
+        throw newError;
       }
     })
     .then((responseJson) => {
