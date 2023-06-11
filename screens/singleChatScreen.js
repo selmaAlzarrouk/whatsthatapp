@@ -212,13 +212,13 @@ export default class singleChatScreen extends Component {
             buttonStyle={singleChatStyling.button}
             titleStyle={singleChatStyling.buttonTitle}
           />
-          <Button
-            title="Edit Group Members"
-            onPress={() => { this.props.navigation.navigate('editMembers'); }}
-            buttonStyle={singleChatStyling.button}
-            titleStyle={singleChatStyling.buttonTitle}
-          />
-         
+        </View>
+        <Button
+          title="Edit Group Members"
+          onPress={() => { this.props.navigation.navigate('editMembers'); }}
+          buttonStyle={singleChatStyling.button}
+          titleStyle={singleChatStyling.buttonTitle}
+        />
 
         <FlatList
           data={this.state.chatData.messages}
