@@ -218,6 +218,15 @@ export default class singleChatScreen extends Component {
             buttonStyle={singleChatStyling.button}
             titleStyle={singleChatStyling.buttonTitle}
           />
+          <TouchableOpacity onPress={this.navigation.navigate('scheduleModal')}>
+            <View style={singleChatStyling.button}>
+              <Text style={singleChatStyling.buttonTitle}>
+                {' '}
+                <Ionicons name="enter-outline" size={27} color="blue" />
+                {' '}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <FlatList
@@ -245,8 +254,9 @@ export default class singleChatScreen extends Component {
           onChangeText={this.messageHandler}
           rightIcon={(
             <TouchableOpacity onPress={this.sendMessage}>
-              <Ionicons name="send" size={24} color="blue" />
+              <Ionicons name="send" size={27} color="blue" />
             </TouchableOpacity>
+
           )}
         />
       </View>
