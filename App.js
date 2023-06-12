@@ -5,9 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainNavigation from './screens/MainNavigation';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
-// here ive imported the create stack navi function to my app !
 
-const Stack = createNativeStackNavigator(); // here i am declaring a new stack navi !
+const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
@@ -22,7 +21,3 @@ function App() {
 }
 
 export default App;
-
-// implement Navigation stack
-//  implement Styling   - tailwind css
-//

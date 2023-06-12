@@ -245,11 +245,14 @@ export default class singleChatScreen extends Component {
           onChangeText={this.messageHandler}
           rightIcon={(
             <TouchableOpacity onPress={this.sendMessage}>
-              <Ionicons name="send" size={27} color="blue" />
+              <Ionicons name="send" size={28} color="blue" />
             </TouchableOpacity>
 
           )}
         />
+        <TouchableOpacity onPress={''}>
+          <Ionicons name="create-outline" size={28} color="blue" />
+        </TouchableOpacity>
       </View>
     );
   }

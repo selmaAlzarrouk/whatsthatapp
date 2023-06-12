@@ -1,14 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
 import {
-  View, Text, TouchableOpacity,ScrollView,
+  StyleSheet,
+  View, Text, TouchableOpacity, ScrollView,
 } from 'react-native';
+
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Icon,ListItem} from 'react-native-elements';
-
+import { Icon, ListItem } from 'react-native-elements';
 
 import {
   addUsertoChat, getContactLisData, getSingleChat, deleteUserinChat,
@@ -50,6 +50,8 @@ export default class chatGroupManagement extends Component {
       contactData: [],
       error: '',
     };
+
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
   componentDidMount() {
@@ -83,7 +85,7 @@ export default class chatGroupManagement extends Component {
     );
   };
 
-  deletUser = async (userId) => {
+  deleteUser = async (userId) => {
     deleteUserinChat(
       await AsyncStorage.getItem('chatID'),
       userId, (
@@ -97,64 +99,63 @@ export default class chatGroupManagement extends Component {
 
   render() {
     return (
-        <ScrollView>
-          <View style={styles.contain}>
-            <Text>{this.state.error}</Text>
-            <View style={styles.section}>
-              <Text style={styles.subheading}>Members In Chats</Text>
-              <FlatList
-                data={this.state.chatData.members}
-                renderItem={({ item }) => (
-                  <ListItem
-                    onPress={() => this.deleteContactHandler(item.user_id)}
-                    bottomDivider
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
-                      <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
-      
-                      <TouchableOpacity onPress={() => this.deleteUser(item.user_id)} style={styles.actContainer}>
-                        <Icon name="trash" type="font-awesome" color="red" style={styles.icon} />
-                        <Text style={styles.deleteTxt}>Delete Contact</Text>
-                      </TouchableOpacity> 
-      
-                    </ListItem.Content>
-                    <ListItem.Chevron />
-                  </ListItem>
-                )}
-                keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-              />
-            </View>
-            <View style={styles.section}>
-              <Text style={styles.subheading}>Friend List</Text>
-              <FlatList
-                data={this.state.contactData}
-                renderItem={({ item }) => (
-                  <ListItem
-                    onPress={() => this.deleteContactHandler(item.user_id)}
-                    bottomDivider
-                  >
-                    <ListItem.Content>
-                      <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
-                      <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
-      
-                      <TouchableOpacity onPress={() => this.addUser(item.user_id)} style={styles.actContainer}>
-                        <Icon name="user-plus" type="font-awesome" color="green" style={styles.icon} />
-                        <Text style={styles.addText}>Add Contact</Text>
-                      </TouchableOpacity> 
-      
-                    </ListItem.Content>
-                    <ListItem.Chevron />
-                  </ListItem>
-                )}
-                keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-              />
-            </View>
+      <ScrollView>
+        <View style={styles.contain}>
+          <Text>{this.state.error}</Text>
+          <View style={styles.section}>
+            <Text style={styles.subheading}>Members In Chats</Text>
+            <FlatList
+              data={this.state.chatData.members}
+              renderItem={({ item }) => (
+                <ListItem
+                  bottomDivider
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                    <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
+
+                    <TouchableOpacity
+                      onPress={() => this.deleteUser(item.user_id)}
+                      style={styles.actContainer}
+                    >
+                      <Icon name="trash" type="font-awesome" color="red" style={styles.icon} />
+                      <Text style={styles.deleteTxt}>Delete Contact</Text>
+                    </TouchableOpacity>
+
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
+              )}
+              keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
+            />
           </View>
-        </ScrollView>
-      );
-      
-    }
+          <View style={styles.section}>
+            <Text style={styles.subheading}>Friend List</Text>
+            <FlatList
+              data={this.state.contactData}
+              renderItem={({ item }) => (
+                <ListItem
+                  onPress={() => this.deleteContactHandler(item.user_id)}
+                  bottomDivider
+                >
+                  <ListItem.Content>
+                    <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                    <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
+
+                    <TouchableOpacity onPress={() => this.addUser(item.user_id)} style={styles.actContainer}>
+                      <Icon name="user-plus" type="font-awesome" color="green" style={styles.icon} />
+                      <Text style={styles.addText}>Add Contact</Text>
+                    </TouchableOpacity>
+
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
+              )}
+              keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
 }
-
-

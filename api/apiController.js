@@ -468,7 +468,7 @@ export const addUsertoChat = async (chatId, userId, success, failure) => {
   })
   // handling the response
     .then((response) => {
-      if (response.status === 201) {
+      if (response.status === 200) {
         return response;
       } if (response.status === 400) {
         const newError = 'Bad';
