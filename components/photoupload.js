@@ -42,7 +42,7 @@ export default function CameraUtils() {
     })
       .then((response) => {
         if (response.status === 200) {
-          return;
+          this.props.navigation.goBack(null);
         }
         if (response.status === 400) {
           const err = 'Bad Request!';

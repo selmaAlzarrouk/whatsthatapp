@@ -196,6 +196,9 @@ export default class singleChatScreen extends Component {
   render() {
     return (
       <View style={singleChatStyling.container}>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+          <Ionicons name="arrow-back" size="large" />
+        </TouchableOpacity>
         <Text style={singleChatStyling.welcomeText}>
           Welcome to
           {' '}
@@ -212,13 +215,13 @@ export default class singleChatScreen extends Component {
             buttonStyle={singleChatStyling.button}
             titleStyle={singleChatStyling.buttonTitle}
           />
+          <Button
+            title="Edit Group Members"
+            onPress={() => { this.props.navigation.navigate('editMembers'); }}
+            buttonStyle={singleChatStyling.button}
+            titleStyle={singleChatStyling.buttonTitle}
+          />
         </View>
-        <Button
-          title="Edit Group Members"
-          onPress={() => { this.props.navigation.navigate('editMembers'); }}
-          buttonStyle={singleChatStyling.button}
-          titleStyle={singleChatStyling.buttonTitle}
-        />
 
         <FlatList
           data={this.state.chatData.messages}
@@ -250,7 +253,7 @@ export default class singleChatScreen extends Component {
 
           )}
         />
-        <TouchableOpacity onPress={''}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('messageManagement', { chatID, chatData })}>
           <Ionicons name="create-outline" size={28} color="blue" />
         </TouchableOpacity>
       </View>

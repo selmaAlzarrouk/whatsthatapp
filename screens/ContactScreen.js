@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 // UI react native Elements :
 import { Icon, ListItem } from 'react-native-elements';
 import {
-  View, Text, TouchableOpacity,
+  ScrollView, Text, TouchableOpacity,
 } from 'react-native';
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -86,7 +86,7 @@ export default class ContactsScreen extends Component {
 
   render() {
     return (
-      <View>
+      <ScrollView>
         <Text>{this.state.error}</Text>
         <FlatList
           data={this.state.contactArr}
@@ -109,7 +109,8 @@ export default class ContactsScreen extends Component {
           keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
         />
         <Text>{this.state.message}</Text>
-      </View>
+      </ScrollView>
+
     );
   }
 }

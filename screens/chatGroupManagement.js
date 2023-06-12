@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
@@ -5,7 +6,7 @@ import {
   StyleSheet,
   View, Text, TouchableOpacity, ScrollView,
 } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
 import { FlatList } from 'react-native-web';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icon, ListItem } from 'react-native-elements';
@@ -101,6 +102,9 @@ export default class chatGroupManagement extends Component {
     return (
       <ScrollView>
         <View style={styles.contain}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+            <Ionicons name="arrow-back" size="large" />
+          </TouchableOpacity>
           <Text>{this.state.error}</Text>
           <View style={styles.section}>
             <Text style={styles.subheading}>Members In Chats</Text>
@@ -135,14 +139,16 @@ export default class chatGroupManagement extends Component {
               data={this.state.contactData}
               renderItem={({ item }) => (
                 <ListItem
-                  onPress={() => this.deleteContactHandler(item.user_id)}
                   bottomDivider
                 >
                   <ListItem.Content>
                     <ListItem.Title>{`${item.first_name} ${item.last_name}`}</ListItem.Title>
                     <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
 
-                    <TouchableOpacity onPress={() => this.addUser(item.user_id)} style={styles.actContainer}>
+                    <TouchableOpacity
+                      onPress={() => this.addUser(item.user_id)}
+                      style={styles.actContainer}
+                    >
                       <Icon name="user-plus" type="font-awesome" color="green" style={styles.icon} />
                       <Text style={styles.addText}>Add Contact</Text>
                     </TouchableOpacity>

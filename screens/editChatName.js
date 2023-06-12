@@ -1,11 +1,12 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  View, Text, TextInput,
+  View, Text, TextInput, TouchableOpacity,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 import { PatchChatName } from '../api/apiController';
 
 export default class editChatName extends Component {
@@ -49,6 +50,9 @@ export default class editChatName extends Component {
   render() {
     return (
       <View>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+          <Ionicons name="arrow-back" size="large" />
+        </TouchableOpacity>
         <TextInput
           placeholder="Edit Chat Name..."
           value={this.state.chatName}

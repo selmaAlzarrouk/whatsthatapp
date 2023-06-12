@@ -2,8 +2,9 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  Text, TextInput, Button, Image, StyleSheet, ScrollView,
+  Text, TextInput, Button, Image, StyleSheet, ScrollView, TouchableOpacity,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -148,6 +149,10 @@ class SignUp extends Component {
   render() {
     return (
       <ScrollView>
+
+        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+          <Ionicons name="arrow-back" size="large" />
+        </TouchableOpacity>
         <Image
           style={styles.logo}
           // eslint-disable-next-line global-require
