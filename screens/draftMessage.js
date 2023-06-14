@@ -5,42 +5,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  View, Text, TouchableOpacity, TextInput,
-} from 'react-native';
-
-// Styles
-const draftstyles = {
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  btnStyle: {
-    backgroundColor: 'blue',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  draftList: {
-    alignItems: 'center',
-  },
-  draftItem: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-};
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 
 class draftChatMessage extends Component {
   constructor(props) {
@@ -56,7 +22,7 @@ class draftChatMessage extends Component {
   handleonPress = async () => {
     const { draftMsg } = this.state;
     if (draftMsg.trim().length === 0) {
-      this.setState({ error: 'cannot be empty the message' });
+      this.setState({ error: 'Message cannot be empty' });
       return;
     }
     this.saveDraftMessageHandler();
@@ -64,84 +30,72 @@ class draftChatMessage extends Component {
 
   saveDraftMessageHandler = async () => {
     try {
-      const {
-        chatName, chatId, draftMsg,
-      } = this.state;
+      const { chatName, chatId, draftMsg } = this.state;
       if (draftMsg.trim().length === 0) {
-        this.setState({ error: 'cannot be empty the message' });
+        this.setState({ error: 'Message cannot be empty' });
+        return;
       }
-
       const jsonString = await AsyncStorage.getItem('draftMsgKey');
       const draftMsgs = jsonString ? JSON.parse(jsonString) : [];
 
-      // grabs the last draftId used
       let finalDraftID = 0;
       if (draftMsgs.length > 0) {
         const finalDraft = draftMsgs[draftMsgs.length - 1];
         finalDraftID = finalDraft.draftId;
-        console.log(`finalDraftID${finalDraftID}`);
       }
-      console.log(`chatId${chatId}`);
-      // this will give new draft id by +1 to the last draft id used
+
       const updatedDraftId = finalDraftID + 1;
 
       draftMsgs.push({
+        chatName,
         chatId,
         draftId: updatedDraftId,
         message: draftMsg,
-
       });
+
       await AsyncStorage.setItem('draftMsgKey', JSON.stringify(draftMsgs));
-      this.setState({ error: 'This Draft Message has been save!!' });
-      this.setState({ draftMsg: '' });
+
+      this.setState({
+        error: 'This Draft Message has been saved!',
+        draftMsg: '',
+      });
+
       this.props.navigation.navigate('draftListScreen');
     } catch (error) {
-      this.setState({ error: 'Sorry this draft message has not saved try again!' });
+      this.setState({ error: 'Sorry, this draft message could not be saved. Please try again.' });
     }
   };
 
   render() {
-    const {
-      draftMsg,
-      chatName,
-      error,
-    } = this.state;
+    const { draftMsg, chatName, error } = this.state;
     return (
-      <View>
-        <Text>DRAFTS:</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>DRAFTS:</Text>
         <Text>
           Draft a message for:
           {' '}
           {chatName}
         </Text>
-        <TextInput
-          style={draftstyles.textInput}
+        <Input
+          inputStyle={{ marginBottom: 20 }}
           value={draftMsg}
           onChangeText={(newDraftMessage) => this.setState({ draftMsg: newDraftMessage })}
-          placeholder="Please Enter your draft message..."
+          placeholder="Please enter your draft message..."
           multiline
         />
 
-        <Text style={draftstyles.errorMessage}>{error}</Text>
-        <View style={draftstyles.buttonContainer}>
-
+        <Text style={{ marginBottom: 20, color: 'red' }}>{error}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
-            <Ionicons name="arrow-back" size="large" />
+            <Ionicons name="arrow-back" size={32} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.handleonPress()}>
-            <View style={draftstyles.button}>
-              <Text style={draftstyles.buttonText}> save Draft</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('draftListScreen')}>
-            <View style={draftstyles.button}>
-              <Text style={draftstyles.buttonText}> My Draft List</Text>
-            </View>
-          </TouchableOpacity>
-
+          <Button title="Save Draft" onPress={() => this.handleonPress()} />
+          <Button
+            title="My Draft List"
+            onPress={() => this.props.navigation.navigate('draftListScreen')}
+          />
         </View>
       </View>
-
     );
   }
 }

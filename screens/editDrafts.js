@@ -11,6 +11,7 @@ export default class editDrafts extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      chatName: props.route.params.chatName,
       message: props.route.params.message,
       draftId: props.route.params.draftId,
       error: '',
@@ -22,7 +23,7 @@ export default class editDrafts extends Component {
       message: patchMessage,
     });
   };
-
+// deals with EDITING
   async patchDraftMessage() {
     try {
       const { message, draftId } = this.state;
@@ -55,6 +56,11 @@ export default class editDrafts extends Component {
       console.log('Successful');
       console.log('Before navigation.navigate():', draftId);
       navigation.navigate('draftListScreen', { updatedDraftId: draftId });
+      // testing
+      // message: props.route.params.message,
+      // draftId: props.route.params.draftId,
+      console.log('THIS IS MY DRAFFT  message :', message);
+      console.log('THIS IS MY DRAFFT  ID :', draftId);
     } catch (err) {
       console.log('Error editing drafts', err);
       this.setState({ error: 'Error updating the draft. Sorry.' });
@@ -63,9 +69,10 @@ export default class editDrafts extends Component {
 
   render() {
     const { navigation } = this.props;
-    const { message, error } = this.state;
+    const { message, error, chatName } = this.state;
     return (
       <View>
+        <Text>{chatName}</Text>
         <TouchableOpacity onPress={() => navigation.goBack(null)}>
           <Ionicons name="arrow-back" size={32} />
         </TouchableOpacity>

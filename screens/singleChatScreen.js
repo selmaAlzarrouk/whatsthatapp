@@ -196,7 +196,7 @@ export default class singleChatScreen extends Component {
   };
 
   render() {
-    const chatId = this.state;
+    const { chatId, chatData } = this.state;
     return (
       <View style={singleChatStyling.container}>
         <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
@@ -256,7 +256,7 @@ export default class singleChatScreen extends Component {
 
           )}
         />
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('draftChatMessage', { chatId })}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('draftChatMessage', { chatId, chatName: chatData.chatName })}>
           <Ionicons name="create-outline" size={28} color="blue" />
         </TouchableOpacity>
       </View>

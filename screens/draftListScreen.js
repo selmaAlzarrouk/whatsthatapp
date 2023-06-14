@@ -7,44 +7,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
-
-// Styles
-const draftListstyles = {
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  btnStyle: {
-    backgroundColor: 'blue',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    marginBottom: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  draftList: {
-    alignItems: 'center',
-  },
-  draftItem: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  timestampText: {
-    fontSize: 12,
-    color: '#000',
-    marginTop: 4,
-  },
-};
+import { Button } from 'react-native-elements';
 
 class draftListScreen extends Component {
   constructor(props) {
@@ -52,7 +15,7 @@ class draftListScreen extends Component {
     this.state = {
       drafts: [],
       isLoading: true,
-      error: '',
+    // message: '',
     };
   }
 
@@ -83,10 +46,20 @@ class draftListScreen extends Component {
 
   deleteDraftMsg = async (draftID) => {
     try {
-      const { drafts } = this.state;
-      const updatedDrafts = drafts.filter((draft) => draft.draftID !== draftID);
-      await AsyncStorage.setItem('draftMsgKey', JSON.stringify(updatedDrafts));
-      this.setState({ drafts: updatedDrafts });
+      const drafts = await AsyncStorage.getItem('draftMsgKey');
+      const navigation = this.props;
+      const message = this.state;
+      const draftArr = JSON.parse(drafts) || [];
+      const removedIndex = draftArr.findIndex((item) => item.draftId === draftID);
+      if (removedIndex !== -1) {
+        draftArr.splice(removedIndex, 1); // removes ele from arr
+        await AsyncStorage.setItem('draftMsgKey', JSON.stringify(draftArr));
+        this.setState({ drafts: draftArr }); // so here ill update state with the modified draft
+        message.message({ message: 'Hurray youve deleted draft' });
+        console.log(draftID, 'IAM MEOW');
+        navigation.navigation.navigate('draftListScreen');
+        console.log(draftID, 'IAM HERERERE');
+      }
     } catch (err) {
       console.log('Error deleting draft', err);
     }
@@ -97,43 +70,44 @@ class draftListScreen extends Component {
 
     if (isLoading) {
       return (
-        <View style={draftListstyles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator />
         </View>
       );
     }
 
     return (
-      <View style={draftListstyles.container}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
           <Ionicons name="arrow-back" size={32} />
         </TouchableOpacity>
-        <Text>List of your Drafts</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>List of your Drafts</Text>
         <FlatList
           data={drafts}
           renderItem={({ item }) => (
             <View>
-              <Text style={draftListstyles.timestampText}>
+              <Text>{item.chatName}</Text>
+              <Text style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
                 {moment(item.timestamp).format('DD/MM/YYYY, h:mm a')}
               </Text>
               <Text>{item.chatName}</Text>
               <Text>{item.message}</Text>
-              <View>
-                <TouchableOpacity
-                  style={draftListstyles.btnStyle}
-                  onPress={() => this.deleteDraftMsg(item.draftID)}
-                >
-                  <Ionicons name="trash" size={24} color="red" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={draftListstyles.btnStyle}
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Button
+                  title="Delete"
+                  buttonStyle={{ backgroundColor: 'red', marginRight: 10 }}
+                  onPress={() => this.deleteDraftMsg(item.draftId)}
+                  icon={<Ionicons name="trash" size={24} color="white" />}
+                />
+                <Button
+                  title="Edit"
+                  buttonStyle={{ backgroundColor: 'black' }}
                   onPress={() => this.props.navigation.navigate('editDrafts', {
                     message: item.message,
-                    draftId: item.draftID,
+                    draftId: item.draftId,
                   })}
-                >
-                  <Ionicons name="create" size={24} color="black" />
-                </TouchableOpacity>
+                  icon={<Ionicons name="create" size={24} color="white" />}
+                />
               </View>
             </View>
           )}
