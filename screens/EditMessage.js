@@ -1,8 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  View, Text, TextInput,
+  View, Text, TextInput, TouchableOpacity,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import { editMessage } from '../api/apiController';
@@ -49,6 +51,9 @@ export default class EditMessage extends Component {
   render() {
     return (
       <View>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+          <Ionicons name="arrow-back" size="large" />
+        </TouchableOpacity>
         <TextInput
           placeholder="Edit message..."
           value={this.state.message}

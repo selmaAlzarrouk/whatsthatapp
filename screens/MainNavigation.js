@@ -17,6 +17,9 @@ import editChatName from './editChatName';
 import EditMessage from './EditMessage';
 import chatGroupManagement from './chatGroupManagement';
 import photoScreen from './photoScreen';
+import draftChatMessage from './draftMessage';
+import draftListScreen from './draftListScreen';
+import editDrafts from './editDrafts';
 
 const Tab = createMaterialTopTabNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -45,6 +48,9 @@ function ChatsStackNavigator() {
       <ChatStack.Screen name="editChat" component={editChatName} />
       <ChatStack.Screen name="editMessage" component={EditMessage} />
       <ChatStack.Screen name="editMembers" component={chatGroupManagement} />
+      <ChatStack.Screen name="draftChatMessage" component={draftChatMessage} />
+      <ChatStack.Screen name="draftListScreen" component={draftListScreen} />
+      <ChatStack.Screen name="editDrafts" component={editDrafts} />
     </ChatStack.Navigator>
   );
 }

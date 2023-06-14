@@ -70,7 +70,7 @@ export default class ChatScreen extends Component {
 
   singleChatSelect = async (chatID) => {
     await AsyncStorage.setItem('chatID', chatID);
-    this.props.navigation.navigate('SingleChat');
+    this.props.navigation.navigate('SingleChat', { chatId: chatID });
   };
 
   render() {

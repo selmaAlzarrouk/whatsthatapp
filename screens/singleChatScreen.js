@@ -13,7 +13,6 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   getSingleChat, deleteMessage, sendMessage,
 } from '../api/apiController';
-// import { Settings } from '@material-ui/icons';
 
 // Styles
 const singleChatStyling = {
@@ -51,7 +50,7 @@ const singleChatStyling = {
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    maxWidth: '70%', // Adjust this value to your preference
+    maxWidth: '70%',
   },
   messageText: {
     fontSize: 16,
@@ -136,7 +135,10 @@ export default class singleChatScreen extends Component {
     sendMessage(
       await AsyncStorage.getItem('chatID'),
       newState.message,
-      (() => { this.getData(); }),
+      (() => {
+        this.setState({ message: '' });
+        this.getData();
+      }),
     );
   };
 
@@ -194,6 +196,7 @@ export default class singleChatScreen extends Component {
   };
 
   render() {
+    const chatId = this.state;
     return (
       <View style={singleChatStyling.container}>
         <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
@@ -253,7 +256,7 @@ export default class singleChatScreen extends Component {
 
           )}
         />
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('messageManagement', { chatID, chatData })}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('draftChatMessage', { chatId })}>
           <Ionicons name="create-outline" size={28} color="blue" />
         </TouchableOpacity>
       </View>
