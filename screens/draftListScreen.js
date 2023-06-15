@@ -15,7 +15,7 @@ class draftListScreen extends Component {
     this.state = {
       drafts: [],
       isLoading: true,
-    // message: '',
+      message: '',
     };
   }
 
@@ -55,13 +55,15 @@ class draftListScreen extends Component {
         draftArr.splice(removedIndex, 1); // removes ele from arr
         await AsyncStorage.setItem('draftMsgKey', JSON.stringify(draftArr));
         this.setState({ drafts: draftArr }); // so here ill update state with the modified draft
-        message.message({ message: 'Hurray youve deleted draft' });
+       this.setState({ message: 'Hurray youve deleted draft' });
         console.log(draftID, 'IAM MEOW');
         navigation.navigation.navigate('draftListScreen');
-        console.log(draftID, 'IAM HERERERE');
+       
       }
     } catch (err) {
       console.log('Error deleting draft', err);
+      
+      
     }
   };
 
