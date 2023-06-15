@@ -1,43 +1,12 @@
+/* eslint-disable global-require */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  Text, TextInput, Button, Image, StyleSheet, ScrollView, TouchableOpacity,
+  ScrollView, TouchableOpacity, Image, 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 300,
-    height: 300,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    paddingHorizontal: 20,
-    backgroundColor: 342E7,
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
-  },
-});
+import { Text, Input, Button } from 'react-native-elements';
 
 class SignUp extends Component {
   constructor(props) {
@@ -149,53 +118,70 @@ class SignUp extends Component {
   render() {
     return (
       <ScrollView>
-
         <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
-          <Ionicons name="arrow-back" size="large" />
+          <Ionicons name="arrow-back" size={32} />
         </TouchableOpacity>
         <Image
-          style={styles.logo}
-          // eslint-disable-next-line global-require
+          style={{
+            width: 150, height: 150, alignSelf: 'center', marginTop: 30,
+          }}
           source={require('../assets/whatsThatLogo.png')}
         />
-        <Text style={styles.title}>Sign Up</Text>
-        <TextInput
-          style={styles.input}
+        <Text style={{
+          textAlign: 'center', marginTop: 10, marginBottom: 20, fontSize: 24,
+        }}
+        >
+          Sign Up
+        </Text>
+        <Input
           placeholder="First name"
+          leftIcon={{ type: 'ionicon', name: 'person' }}
           value={this.state.firstname}
           onChangeText={this.firstnameHandler}
+          inputStyle={{ fontSize: 16 }}
+          containerStyle={{ marginBottom: 10 }}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Last name"
+          leftIcon={{ type: 'ionicon', name: 'person' }}
           value={this.state.lastname}
           onChangeText={this.lastnameHandler}
+          inputStyle={{ fontSize: 16 }}
+          containerStyle={{ marginBottom: 10 }}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Email"
+          leftIcon={{ type: 'ionicon', name: 'mail' }}
           value={this.state.email}
           onChangeText={this.emailHandler}
+          inputStyle={{ fontSize: 20 }}
+          containerStyle={{ marginBottom: 12 }}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Password"
           secureTextEntry
+          leftIcon={{ type: 'ionicon', name: 'lock-closed' }}
           value={this.state.password}
           onChangeText={this.passwordHandler}
+          inputStyle={{ fontSize: 20 }}
+          containerStyle={{ marginBottom: 12 }}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Confirm Password"
           secureTextEntry
+          leftIcon={{ type: 'ionicon', name: 'lock-closed' }}
           value={this.state.confirmpassword}
           onChangeText={this.confirmpasswordHandler}
+          inputStyle={{ fontSize: 20 }}
+          containerStyle={{ marginBottom: 12 }}
         />
-        <Button title="Sign Up" onPress={this.signupRequest} />
-        <Text>
-          {' '}
+        <Button
+          title="Sign Up"
+          buttonStyle={{ marginVertical: 20, marginHorizontal: 50 }}
+          onPress={this.signupRequest}
+        />
+        <Text style={{ textAlign: 'center', color: 'red', marginTop: 10 }}>
           {this.state.error}
-          {' '}
         </Text>
       </ScrollView>
     );
