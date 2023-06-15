@@ -88,7 +88,7 @@ export default class MainNavigation extends Component {
             } else if (route.name === 'Profile') {
               iconName = 'account';
             } else if (route.name === 'Users') {
-              iconName = 'person-add-alt-1';
+              iconName = 'person-add';
             } else if (route.name === 'Blocked') {
               iconName = 'block-helper';
             }

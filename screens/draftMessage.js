@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Button, Input } from 'react-native-elements';
+import moment from 'moment';
 
 class draftChatMessage extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ class draftChatMessage extends Component {
         chatId,
         draftId: updatedDraftId,
         message: draftMsg,
+        timestamp: moment().toISOString(),
       });
 
       await AsyncStorage.setItem('draftMsgKey', JSON.stringify(draftMsgs));

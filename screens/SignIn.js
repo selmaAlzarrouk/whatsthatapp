@@ -1,47 +1,18 @@
+/* eslint-disable global-require */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image,
+  TouchableOpacity, Image, View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Text, Input, Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userLogsin } from '../api/apiController';
 
 const validator = require('email-validator');
 
 validator.validate('test@gmail.com'); // true
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 300,
-    height: 300,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    paddingHorizontal: 20,
-    backgroundColor: 342E7,
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
-  },
-});
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -87,32 +58,44 @@ class SignIn extends Component {
   // handle sign-in logic here
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text h4 style={{ marginBottom: 20 }}>
+          Sign In
+        </Text>
         <Image
-          style={styles.logo}
-          // eslint-disable-next-line global-require
+          style={{ width: 145, height: 145 }}
           source={require('../assets/whatsThatLogo.png')}
         />
 
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Email"
+          leftIcon={{ type: 'ionicon', name: 'mail' }}
           value={this.state.email}
           onChangeText={this.emailHandler}
+          inputStyle={{ fontSize: 20 }}
+          containerStyle={{ marginBottom: 12 }}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Password"
           secureTextEntry
+          leftIcon={{ type: 'ionicon', name: 'lock-closed' }}
           value={this.state.password}
           onChangeText={this.passwordHandler}
+          inputStyle={{ fontSize: 20 }}
+          containerStyle={{ marginBottom: 12 }}
         />
-        <Text style={styles.errorMessage}>{this.state.error}</Text>
-        <Button title="Sign In" onPress={this.signInRequest} />
+        <Text style={{ textAlign: 'center', color: 'red', marginBottom: 10 }}>
+          {this.state.error}
+        </Text>
+        <Button
+          title="Sign In"
+          buttonStyle={{ marginVertical: 10, marginHorizontal: 50 }}
+          onPress={this.signInRequest}
+        />
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Register</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+            <Ionicons name="person-add" size={15} color="black" style={{ marginRight: 6 }} />
+            <Text>Click here if you dont  account to Register</Text>
           </View>
         </TouchableOpacity>
       </View>
