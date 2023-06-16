@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input , ThemeProvider, Switch} from 'react-native-elements';
 import moment from 'moment';
 
 class draftChatMessage extends Component {
@@ -17,8 +17,15 @@ class draftChatMessage extends Component {
       chatName: props.route.params.chatName,
       draftMsg: '',
       error: '',
+      theme: 'light',
     };
+
   }
+  toggleTheme = () => {
+    this.setState((prevState) => ({
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
+    }));
+  };
 
   handleonPress = async () => {
     const { draftMsg } = this.state;
@@ -69,35 +76,41 @@ class draftChatMessage extends Component {
   };
 
   render() {
-    const { draftMsg, chatName, error } = this.state;
+    const { draftMsg, chatName, error, theme } = this.state;
+    const bgColour = theme === 'dark' ? '#000000' : '#f2f2f2';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
+
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>DRAFTS:</Text>
-        <Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: bgColour }}>
+      <ThemeProvider useDark={theme === 'dark'}>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+          <Ionicons name="arrow-back" size={32} color={textColour} />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: textColour }}>DRAFTS:</Text>
+        <Text style={{ color: textColour }}>
           Draft a message for:
           {' '}
           {chatName}
         </Text>
         <Input
-          inputStyle={{ marginBottom: 20 }}
+          inputStyle={{ marginBottom: 20, color: textColour }}
           value={draftMsg}
           onChangeText={(newDraftMessage) => this.setState({ draftMsg: newDraftMessage })}
           placeholder="Please enter your draft message..."
           multiline
         />
 
-        <Text style={{ marginBottom: 20, color: 'red' }}>{error}</Text>
+        <Text style={{ marginBottom: 20, color: 'red', color: textColour }}>{error}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
-            <Ionicons name="arrow-back" size={32} />
-          </TouchableOpacity>
           <Button title="Save Draft" onPress={() => this.handleonPress()} />
           <Button
             title="My Draft List"
             onPress={() => this.props.navigation.navigate('draftListScreen')}
           />
         </View>
-      </View>
+        <Switch value={theme === 'dark'} onValueChange={this.toggleTheme} />
+      </ThemeProvider>
+    </View>
     );
   }
 }

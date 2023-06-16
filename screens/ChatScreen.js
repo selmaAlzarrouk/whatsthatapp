@@ -84,8 +84,12 @@ export default class ChatScreen extends Component {
   };
 
   render() {
+    const { theme } = this.state;
+    const bgColour = theme === 'dark' ? ' #007bff' : '#f2f2f2';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
+
     return (
-      <View>
+      <View style={{flex:1 ,bgColour}}>
         <ThemeProvider useDark={this.state.theme === 'dark'}>
 
           <Text>
@@ -113,17 +117,18 @@ export default class ChatScreen extends Component {
                 chevron
               >
                 <ListItem.Content>
-                  <ListItem.Title>{item.name}</ListItem.Title>
-                  <ListItem.Subtitle>{item.creator.first_name}</ListItem.Subtitle>
+                  <ListItem.Title style={{color: textColour}}>{item.name}</ListItem.Title>
+                  <ListItem.Subtitle style={{color: textColour}}>{item.creator.first_name}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             )}
             keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
           />
-          <Switch value={this.state.theme === 'dark'} onValueChange={this.toggleTheme} />
+       <Switch value={this.state.theme === 'dark'} onValueChange={this.toggleTheme} />
 
-        </ThemeProvider>
+</ThemeProvider>   
       </View>
+      
     );
   }
 }
