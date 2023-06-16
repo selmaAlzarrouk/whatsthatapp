@@ -2,11 +2,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 // UI react Native elements library:
-import { Input, Button, ListItem } from 'react-native-elements';
+import {
+  Input, Button, ListItem, ThemeProvider,
+} from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { View, Text } from 'react-native';
-import { FlatList } from 'react-native-web';
+import {
+  View, Text, FlatList, Switch,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createChat } from '../api/apiController';
 
@@ -17,6 +20,7 @@ export default class ChatScreen extends Component {
       chats: [],
       chatName: '',
       error: '',
+      theme: 'light',
     };
   }
 
@@ -57,6 +61,12 @@ export default class ChatScreen extends Component {
       });
   }
 
+  toggleTheme = () => {
+    this.setState((prevState) => ({
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
+    }));
+  };
+
   createChatHandler = (newChatInstance) => {
     this.setState({ chatName: newChatInstance });
   };
@@ -76,38 +86,43 @@ export default class ChatScreen extends Component {
   render() {
     return (
       <View>
-        <Text>
-          {this.state.error}
-        </Text>
-        <Input
-          placeholder="Create new chat"
-          value={this.state.chatName}
-          onChangeText={this.createChatHandler}
-          leftIcon={<FontAwesome name="comment" size={24} color="black" />}
-          containerStyle={{ marginBottom: 16 }}
-          inputContainerStyle={{ borderBottomWidth: 0 }}
-        />
-        <Button
-          title="Create Chat"
-          onPress={this.createChat}
-          buttonStyle={{ backgroundColor: '#007bff', marginBottom: 16 }}
-        />
-        <FlatList
-          data={this.state.chats}
-          renderItem={({ item }) => (
-            <ListItem
-              onPress={() => this.singleChatSelect(item.chat_id)}
-              bottomDivider
-              chevron
-            >
-              <ListItem.Content>
-                <ListItem.Title>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>{item.creator.first_name}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-          )}
-          keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-        />
+        <ThemeProvider useDark={this.state.theme === 'dark'}>
+
+          <Text>
+            {this.state.error}
+          </Text>
+          <Input
+            placeholder="Create new chat"
+            value={this.state.chatName}
+            onChangeText={this.createChatHandler}
+            leftIcon={<FontAwesome name="comment" size={24} color="black" />}
+            containerStyle={{ marginBottom: 16 }}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
+          />
+          <Button
+            title="Create Chat"
+            onPress={this.createChat}
+            buttonStyle={{ backgroundColor: '#007bff', marginBottom: 16 }}
+          />
+          <FlatList
+            data={this.state.chats}
+            renderItem={({ item }) => (
+              <ListItem
+                onPress={() => this.singleChatSelect(item.chat_id)}
+                bottomDivider
+                chevron
+              >
+                <ListItem.Content>
+                  <ListItem.Title>{item.name}</ListItem.Title>
+                  <ListItem.Subtitle>{item.creator.first_name}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            )}
+            keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
+          />
+          <Switch value={this.state.theme === 'dark'} onValueChange={this.toggleTheme} />
+
+        </ThemeProvider>
       </View>
     );
   }
