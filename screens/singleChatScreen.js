@@ -1,20 +1,18 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
+import { Button, Input, ThemeProvider, Switch } from "react-native-elements";
+import { Ionicons } from "@expo/vector-icons";
 import {
-  View, Text, TouchableOpacity,
-  FlatList,
-} from 'react-native';
+  getSingleChat,
+  deleteMessage,
+  sendMessage,
+} from "../api/apiController";
+import { color } from "@rneui/base";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
-import { Button, Input } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
-import {
-  getSingleChat, deleteMessage, sendMessage,
-} from '../api/apiController';
-
-// Styles
 const singleChatStyling = {
   container: {
     flex: 1,
@@ -25,12 +23,12 @@ const singleChatStyling = {
     marginBottom: 20,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     borderRadius: 10,
   },
   buttonTitle: {
@@ -38,74 +36,72 @@ const singleChatStyling = {
   },
   messageContainer: {
     marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   chatBubbleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
     marginBottom: 8,
   },
   chatBubble: {
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    maxWidth: '70%',
+    maxWidth: "70%",
   },
   messageText: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
   timestampText: {
     fontSize: 12,
-    color: '#000',
+    color: "#000",
     marginTop: 4,
   },
   currentUserBubble: {
-    // goesleft design chat bubble
-    backgroundColor: '#0078fe',
+    backgroundColor: "#0078fe",
     padding: 10,
-    marginLeft: '45%',
+    marginLeft: "45%",
     borderRadius: 20,
-
     marginTop: 5,
-    marginRight: '5%',
-    maxWidth: '50%',
-    alignSelf: 'flex-end',
+    marginRight: "5%",
+    maxWidth: "50%",
+    alignSelf: "flex-end",
   },
   otherUserBubble: {
-    // goes Right design chat bubble
-    backgroundColor: '#dedede',
+    backgroundColor: "#dedede",
     padding: 10,
     marginTop: 5,
-    marginLeft: '5%',
-    maxWidth: '50%',
-    alignSelf: 'flex-start',
+    marginLeft: "5%",
+    maxWidth: "50%",
+    alignSelf: "flex-start",
     borderRadius: 30,
   },
   currentUserMessageText: {
-    color: '#FFF',
+    color: "#FFF",
   },
   otherUserMessageText: {
-    color: '#000',
+    color: "#000",
   },
 };
 
-export default class singleChatScreen extends Component {
+export default class SingleChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       chatData: [],
-      message: '',
+      message: "",
       user_id: 0,
-      error: '',
+      error: "",
+      theme: "light",
     };
 
     this.editMsg = this.editMsg.bind(this);
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+    this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.getData();
     });
   }
@@ -115,8 +111,8 @@ export default class singleChatScreen extends Component {
   }
 
   async getData() {
-    const chatID = await AsyncStorage.getItem('chatID');
-    const uid = parseInt(await AsyncStorage.getItem('id'), 10);
+    const chatID = await AsyncStorage.getItem("chatID");
+    const uid = parseInt(await AsyncStorage.getItem("id"), 10);
 
     getSingleChat(chatID, (response) => {
       this.setState({
@@ -132,30 +128,28 @@ export default class singleChatScreen extends Component {
 
   sendMessage = async () => {
     const newState = this.state;
-    sendMessage(
-      await AsyncStorage.getItem('chatID'),
-      newState.message,
-      (() => {
-        this.setState({ message: '' });
-        this.getData();
-      }),
-    );
+    sendMessage(await AsyncStorage.getItem("chatID"), newState.message, () => {
+      this.setState({ message: "" });
+      this.getData();
+    });
   };
 
   editMsg = async (messageID, message) => {
-    await AsyncStorage.setItem('messageID', messageID);
-    await AsyncStorage.setItem('Message', message);
-    this.props.navigation.navigate('editMessage');
+    await AsyncStorage.setItem("messageID", messageID);
+    await AsyncStorage.setItem("Message", message);
+    this.props.navigation.navigate("editMessage");
   };
 
   deleteMsg = async (messageID) => {
     deleteMessage(
-      await AsyncStorage.getItem('chatID'),
+      await AsyncStorage.getItem("chatID"),
       messageID,
-      (() => { this.getData(); }),
-      ((err) => {
+      () => {
+        this.getData();
+      },
+      (err) => {
         this.setState({ error: err });
-      }),
+      }
     );
   };
 
@@ -169,97 +163,137 @@ export default class singleChatScreen extends Component {
 
   chatModification = (id, messageId, Message) => {
     if (id === this.state.user_id) {
+      const {theme} = this.state;
+      const iconColor = theme === "dark" ? "#fff" : "black";
       return (
         <View>
           <TouchableOpacity
             style={singleChatStyling.iconButton}
             onPress={() => this.deleteMsg(messageId)}
+            accessible={true}
+            accessibilityLabel="Delete Message"
           >
             <Ionicons name="trash" size={24} color="red" />
           </TouchableOpacity>
           <TouchableOpacity
             style={singleChatStyling.iconButton}
             onPress={() => this.editMsg(messageId, Message)}
+            accessible={true}
+            accessibilityLabel="Edit Message"
           >
-            <Ionicons name="create" size={24} color="black" />
+            <Ionicons name="create" size={24} color={iconColor} />
           </TouchableOpacity>
         </View>
       );
     }
-    return (<View><Text> </Text></View>);
+
+    return null;
   };
 
   editChatName = async (editChatName) => {
-    await AsyncStorage.setItem('editChatName', editChatName);
-
-    this.props.navigation.navigate('editChat');
+    await AsyncStorage.setItem("editChatName", editChatName);
+    this.props.navigation.navigate("editChat");
+  };
+  toggleTheme = () => {
+    this.setState((prevState) => ({
+      theme: prevState.theme === "light" ? "dark" : "light",
+    }));
   };
 
   render() {
+    const { theme } = this.state;
+    const bgColour = theme === "dark" ? "#000000" : "#ffffff";
+    const textColour = theme === "dark" ? "#ffffff" : "#000000";
+
     const { chatId, chatData } = this.state;
     return (
-      <View style={singleChatStyling.container}>
-        <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
-          <Ionicons name="arrow-back" size="large" />
-        </TouchableOpacity>
-        <Text style={singleChatStyling.welcomeText}>
-          Welcome to
-          {' '}
-          {this.state.chatData.name}
-        </Text>
-        <Text>
-          {' '}
-          {this.state.error}
-        </Text>
-        <View style={singleChatStyling.buttonContainer}>
-          <Button
-            title="Edit Chat Name"
-            onPress={() => { this.editChatName(this.state.chatData.name); }}
-            buttonStyle={singleChatStyling.button}
-            titleStyle={singleChatStyling.buttonTitle}
-          />
-          <Button
-            title="Edit Group Members"
-            onPress={() => { this.props.navigation.navigate('editMembers'); }}
-            buttonStyle={singleChatStyling.button}
-            titleStyle={singleChatStyling.buttonTitle}
-          />
-        </View>
+      <ThemeProvider useDark={theme === "dark"}>
+        <View
+          style={[singleChatStyling.container, { backgroundColor: bgColour }]}
+        >
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
+            <Ionicons name="arrow-back" size={24} color={textColour}  />
+          </TouchableOpacity>
+          <Text style={[singleChatStyling.welcomeText, { color:textColour }]}>
+            Welcome to {this.state.chatData.name}
+          </Text>
+          <Text>{this.state.error}</Text>
+          <View style={singleChatStyling.buttonContainer}>
+            <Button
+              title="Edit Chat Name"
+              onPress={() => {
+                this.editChatName(this.state.chatData.name);
+              }}
+              buttonStyle={singleChatStyling.button}
+              titleStyle={singleChatStyling.buttonTitle}
+              accessibilityLabel="Edit Chat Name"
+            />
+            <Button
+              title="Edit Group Members"
+              onPress={() => {
+                this.props.navigation.navigate("editMembers");
+              }}
+              buttonStyle={singleChatStyling.button}
+              titleStyle={singleChatStyling.buttonTitle}
+              accessibilityLabel="Edit Group Members"
+            />
+          </View>
 
-        <FlatList
-          data={this.state.chatData.messages}
-          renderItem={({ item }) => (
-            <View>
-              <View style={this.determineStyle(item.author.user_id)}>
-                <Text>{item.message}</Text>
-                <Text style={singleChatStyling.timestampText}>
-                  {moment(item.timestamp).format('DD/MM/YYYY, h:mm a')}
-                  {' '}
-                </Text>
-              </View>
+          <FlatList
+            data={this.state.chatData.messages}
+            renderItem={({ item }) => (
               <View>
-                {this.chatModification(item.author.user_id, item.message_id, item.message)}
+                <View style={this.determineStyle(item.author.user_id)}>
+                  <Text>{item.message}</Text>
+                  <Text style={singleChatStyling.timestampText}>
+                    {moment(item.timestamp).format("DD/MM/YYYY, h:mm a")}
+                  </Text>
+                </View>
+                <View>
+                  {this.chatModification(
+                    item.author.user_id,
+                    item.message_id,
+                    item.message
+                  )}
+                </View>
               </View>
-            </View>
-          )}
-          keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
-        />
+            )}
+            keyExtractor={({ id }, index) =>
+              id ? id.toString() : index.toString()
+            }
+          />
 
-        <Input
-          placeholder="New Message"
-          value={this.state.message}
-          onChangeText={this.messageHandler}
-          rightIcon={(
-            <TouchableOpacity onPress={this.sendMessage}>
-              <Ionicons name="send" size={28} color="blue" />
-            </TouchableOpacity>
-
-          )}
-        />
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('draftChatMessage', { chatId, chatName: chatData.chatName })}>
-          <Ionicons name="create-outline" size={28} color="blue" />
-        </TouchableOpacity>
-      </View>
+          <Input
+            placeholder="New Message"
+            value={this.state.message}
+            onChangeText={this.messageHandler}
+            rightIcon={
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("draftChatMessage", {
+                      chatId,
+                      chatName: chatData.chatName,
+                    })
+                  }
+                  accessible={true}
+                  accessibilityLabel="Draft Chat Message"
+                >
+                  <Ionicons name="create-outline" size={25} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this.sendMessage}
+                  accessible={true}
+                  accessibilityLabel="Send Message"
+                >
+                  <Ionicons name="send" size={25} color="blue" />
+                </TouchableOpacity>
+              </View>
+            }
+          />
+          <Switch value={theme === "dark"} onValueChange={this.toggleTheme} />
+        </View>
+      </ThemeProvider>
     );
   }
 }

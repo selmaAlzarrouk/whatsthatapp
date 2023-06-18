@@ -1,17 +1,17 @@
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
-import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, Image, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "@rneui/base";
+import React, { Component } from 'react';
+import { StyleSheet, Text, TextInput, Image, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from '@rneui/base';
 import {
   getContactAccount,
   getAccountPhoto,
   PatchUserData,
   userLogout,
 } from "../api/apiController";
-import { ThemeProvider, Switch } from "react-native-elements";
+import { ThemeProvider, Switch } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container: {

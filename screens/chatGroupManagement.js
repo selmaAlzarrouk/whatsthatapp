@@ -7,7 +7,7 @@ import {
   View, Text, TouchableOpacity, ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { FlatList } from 'react-native-web';
+import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icon, ListItem } from 'react-native-elements';
 

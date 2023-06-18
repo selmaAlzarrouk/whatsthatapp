@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Button, Input , ThemeProvider, Switch} from 'react-native-elements';
+import {Input , ThemeProvider, Switch, Button} from 'react-native-elements';
 import moment from 'moment';
 
 class draftChatMessage extends Component {
@@ -103,9 +103,7 @@ class draftChatMessage extends Component {
         <Text style={{ marginBottom: 20, color: 'red', color: textColour }}>{error}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
           <Button title="Save Draft" onPress={() => this.handleonPress()} />
-          <Button
-            title="My Draft List"
-            onPress={() => this.props.navigation.navigate('draftListScreen')}
+          <Button title="My Draft List" onPress={() => this.props.navigation.navigate('draftListScreen')}
           />
         </View>
         <Switch value={theme === 'dark'} onValueChange={this.toggleTheme} />
