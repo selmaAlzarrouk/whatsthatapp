@@ -1,27 +1,31 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
-import React, { Component } from "react";
+import React, { Component } from 'react';
 // UI react Native elements library:
-import { Input, Button, ListItem, ThemeProvider } from "react-native-elements";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import {
+  Input, Button, ListItem, ThemeProvider,
+} from 'react-native-elements';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { View, Text, FlatList, Switch } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createChat } from "../api/apiController";
+import {
+  View, Text, FlatList, Switch,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createChat } from '../api/apiController';
 
 export default class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       chats: [],
-      chatName: "",
-      error: "",
-      theme: "light",
+      chatName: '',
+      error: '',
+      theme: 'light',
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener("focus", async () => {
+    this.unsubscribe = this.props.navigation.addListener('focus', async () => {
       this.getData();
     });
   }
@@ -31,11 +35,11 @@ export default class ChatScreen extends Component {
   }
 
   async getData() {
-    const token = await AsyncStorage.getItem("whatsthat_session_token");
-    return fetch("http://localhost:3333/api/1.0.0/chat", {
-      method: "get",
+    const token = await AsyncStorage.getItem('whatsthat_session_token');
+    return fetch('http://localhost:3333/api/1.0.0/chat', {
+      method: 'get',
       headers: {
-        "x-authorization": token,
+        'x-authorization': token,
       },
     })
       .then((response) => {
@@ -43,10 +47,10 @@ export default class ChatScreen extends Component {
           return response.json();
         }
         if (response.status === 401) {
-          const error = "unauthorised";
+          const error = 'unauthorised';
           throw error;
         } else {
-          const err = "Server Error";
+          const err = 'Server Error';
           throw err;
         }
       })
@@ -60,7 +64,7 @@ export default class ChatScreen extends Component {
 
   toggleTheme = () => {
     this.setState((prevState) => ({
-      theme: prevState.theme === "light" ? "dark" : "light",
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
     }));
   };
 
@@ -75,17 +79,17 @@ export default class ChatScreen extends Component {
   };
 
   singleChatSelect = async (chatID) => {
-    await AsyncStorage.setItem("chatID", chatID);
-    this.props.navigation.navigate("SingleChat", { chatId: chatID });
+    await AsyncStorage.setItem('chatID', chatID);
+    this.props.navigation.navigate('SingleChat', { chatId: chatID });
   };
 
   render() {
     const { theme } = this.state;
-    const bgColour = theme === "dark" ? "#000000" : "#f2f2f2";
-    const textColour = theme === "dark" ? "#ffffff" : "#000000";
+    const bgColour = theme === 'dark' ? '#000000' : '#f2f2f2';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
 
     return (
-      <ThemeProvider useDark={theme === "dark"}>
+      <ThemeProvider useDark={theme === 'dark'}>
         <View style={{ flex: 1, backgroundColor: bgColour }}>
           <Text style={{ color: textColour }}>{this.state.error}</Text>
           <Input
@@ -95,19 +99,20 @@ export default class ChatScreen extends Component {
             leftIcon={
               <FontAwesome name="comment" size={30} color={textColour} />
             }
-            containerStyle={{ marginBottom: 30}}
+            containerStyle={{ marginBottom: 30 }}
             inputContainerStyle={{ borderBottomWidth: 1 }}
             inputStyle={{ color: textColour, placeholderTextColor: textColour }}
           />
-          <Button style={{backgroundColor: bgColour }}
+          <Button
+            style={{ backgroundColor: bgColour }}
             title="Create Chat"
             onPress={this.createChat}
             buttonStyle={{
-              backgroundColor: "#007bff",
+              backgroundColor: '#007bff',
               marginBottom: 16,
-              }}
+            }}
             titleStyle={{ color: textColour }}
-                />
+          />
           <FlatList
             data={this.state.chats}
             renderItem={({ item }) => (
@@ -126,12 +131,10 @@ export default class ChatScreen extends Component {
                 </ListItem.Content>
               </ListItem>
             )}
-            keyExtractor={({ id }, index) =>
-              id ? id.toString() : index.toString()
-            }
+            keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
           />
           <Switch
-            value={this.state.theme === "dark"}
+            value={this.state.theme === 'dark'}
             onValueChange={this.toggleTheme}
             accessibilityLabel="Toggle Dark Mode"
           />
