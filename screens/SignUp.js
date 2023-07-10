@@ -3,7 +3,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  ScrollView, TouchableOpacity, Image, 
+  ScrollView, TouchableOpacity, Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, Input, Button } from 'react-native-elements';
@@ -123,7 +123,7 @@ class SignUp extends Component {
         </TouchableOpacity>
         <Image
           style={{
-            width: 150, height: 150, alignSelf: 'center', marginTop: 30,
+            width: 145, height: 145, alignSelf: 'center', marginTop: 30,
           }}
           source={require('../assets/whatsThatLogo.png')}
         />

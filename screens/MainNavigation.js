@@ -60,7 +60,7 @@ function ChatsStackNavigator() {
 export default class MainNavigation extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.checkLoggedIn();
+      this.checkToken();
     });
   }
 
@@ -68,10 +68,12 @@ export default class MainNavigation extends Component {
     this.unsubscribe();
   }
 
-  checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('whatsthat_session_token');
-    if (value == null) {
-      this.props.navigation.navigate('Login');
+  checkToken = async () => {
+    const token = await AsyncStorage.getItem('whatsthat_session_token');
+    if (token) {
+      this.props.navigation.navigate('MainNavigation');
+    } else {
+      this.props.navigation.navigate('login');
     }
   };
 

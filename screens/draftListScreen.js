@@ -161,18 +161,6 @@ class draftListScreen extends Component {
                     })}
                     icon={<Ionicons name="create" size={24} color="white" />}
                   />
-                  <Button
-                    title="Schedule"
-                    buttonStyle={{ backgroundColor: 'green', marginRight: 10 }}
-                    onPress={() =>this.props.navigation.navigate('ScheduledMessage', {
-                      message: item.message,
-                      draftId: item.draftId,
-                                           
-                    })}
-                    icon={<Ionicons name="time" size={24} color="white" />}
-                  />
-
-
                 </View>
               </View>
             )}

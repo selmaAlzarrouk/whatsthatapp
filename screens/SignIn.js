@@ -6,7 +6,7 @@ import {
   TouchableOpacity, Image, View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, Input, Button, } from 'react-native-elements';
+import { Text, Input, Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userLogsin } from '../api/apiController';
 
@@ -17,12 +17,25 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'kendoll@gmail.com',
-      password: 'Hello123!',
+      email: '',
+      password: '',
       error: '',
 
     };
   }
+
+  componentDidMount() {
+    this.checkToken();
+  }
+
+  checkToken = async () => {
+    const token = await AsyncStorage.getItem('whatsthat_session_token');
+    if (token) {
+      this.props.navigation.navigate('MainNavigation');
+    } else {
+      this.props.navigation.navigate('login');
+    }
+  };
 
   // Email Handler - this will change the value of the email state
   emailHandler = (newEmail) => {

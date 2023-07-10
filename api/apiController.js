@@ -203,7 +203,7 @@ export const sendMessage = async (chatId, mssg, success, failure) => {
       } if (response.status === 400) {
         const newError = ' Bad Request';
         throw newError;
-      } else if (response.status === 401) {  
+      } else if (response.status === 401) {
         const newError = ' Unauthorised';
         throw newError;
       } else if (response.status === 403) {
