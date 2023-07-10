@@ -29,37 +29,37 @@ export default class editDrafts extends Component {
       const { message, draftId } = this.state;
       const { navigation } = this.props;
 
-      console.log("Before AsyncStorage.getItem():", draftId);
+     // console.log("Before AsyncStorage.getItem():", draftId);
 
       const draftsObject = await AsyncStorage.getItem("draftMsgKey");
-      console.log("After AsyncStorage.getItem():", draftsObject);
+     // console.log("After AsyncStorage.getItem():", draftsObject);
 
       const editedDrafts = JSON.parse(draftsObject);
-      console.log("After JSON.parse():", editedDrafts);
+     // console.log("After JSON.parse():", editedDrafts);
 
       const draftIndex = editedDrafts.findIndex(
         (draft) => draft.draftId === draftId
       );
-      console.log("After findIndex():", draftIndex);
+      //console.log("After findIndex():", draftIndex);
 
       if (draftIndex > -1) {
-        console.log("Inside if (draftIndex > -1) block:", message);
+        //console.log("Inside if (draftIndex > -1) block:", message);
         editedDrafts[draftIndex].message = message;
       }
 
-      console.log("After message update:", editedDrafts);
+      //console.log("After message update:", editedDrafts);
 
-      console.log("Before AsyncStorage.setItem():", editedDrafts);
+      //console.log("Before AsyncStorage.setItem():", editedDrafts);
       await AsyncStorage.setItem("draftMsgKey", JSON.stringify(editedDrafts));
 
       const storedValue = await AsyncStorage.getItem("draftMsgKey");
-      console.log("After AsyncStorage.setItem():", storedValue);
+      //console.log("After AsyncStorage.setItem():", storedValue);
 
-      console.log("Successful");
-      console.log("Before navigation.navigate():", draftId);
+     // console.log("Successful");
+     // console.log("Before navigation.navigate():", draftId);
       navigation.navigate("draftListScreen", { updatedDraftId: draftId });
     } catch (err) {
-      console.log("Error editing drafts", err);
+      //console.log("Error editing drafts", err);
       this.setState({ error: "Error updating the draft. Sorry." });
     }
   }
@@ -77,6 +77,7 @@ export default class editDrafts extends Component {
     const { message, error, chatName } = this.state;
 
     return (
+      <ThemeProvider>
       <View>
         <Text>{chatName}</Text>
         <TouchableOpacity onPress={() => navigation.goBack(null)}>
@@ -91,6 +92,10 @@ export default class editDrafts extends Component {
         <Button title="Edit Draft" onPress={() => this.patchDraftMessage()} />
         <Text>{error}</Text>
       </View>
+      <Switch value={theme === "dark"} onValueChange={this.toggleTheme} />
+      </ThemeProvider>
+      
+    
     );
   }
 }

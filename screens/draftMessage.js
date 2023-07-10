@@ -8,7 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
 import {Input , ThemeProvider, Switch, Button} from 'react-native-elements';
 import moment from 'moment';
-
+import TimePicker from 'react-time-picker';
+import { TimePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 class draftChatMessage extends Component {
   constructor(props) {
     super(props);
@@ -18,9 +20,25 @@ class draftChatMessage extends Component {
       draftMsg: '',
       error: '',
       theme: 'light',
+        visible: false,
+      hours: 12,
+      minutes: 14,
     };
-
   }
+  onDismiss=()=>{
+    this.setState({ visible: false });
+  };
+
+  onConfirm = ({ hours, minutes }) => {
+    this.setState({ visible: false, hours, minutes });
+      const selectedTime = new Date();
+    selectedTime.setHours(hours);
+    selectedTime.setMinutes(minutes);
+    // Call any necessary functions or update state here
+    console.log({ selectedTime});
+  };
+
+
   toggleTheme = () => {
     this.setState((prevState) => ({
       theme: prevState.theme === 'light' ? 'dark' : 'light',
@@ -79,7 +97,8 @@ class draftChatMessage extends Component {
     const { draftMsg, chatName, error, theme } = this.state;
     const bgColour = theme === 'dark' ? '#000000' : '#f2f2f2';
     const textColour = theme === 'dark' ? '#ffffff' : '#000000';
-
+    const { visible, hours, minutes } = this.state;
+    
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: bgColour }}>
       <ThemeProvider useDark={theme === 'dark'}>
@@ -106,6 +125,20 @@ class draftChatMessage extends Component {
           <Button title="My Draft List" onPress={() => this.props.navigation.navigate('draftListScreen')}
           />
         </View>
+
+        <SafeAreaProvider>
+        <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+          <Button onPress={() => this.setState({ visible: true })} uppercase={false} mode="outlined">
+             </Button>
+          <TimePickerModal
+            visible={visible}
+            onDismiss={this.onDismiss}
+            onConfirm={this.onConfirm}
+            hours={hours}
+            minutes={minutes}
+          />
+        </View>
+      </SafeAreaProvider>
         <Switch value={theme === 'dark'} onValueChange={this.toggleTheme} />
       </ThemeProvider>
     </View>

@@ -20,6 +20,7 @@ import photoScreen from './photoScreen';
 import draftChatMessage from './draftMessage';
 import draftListScreen from './draftListScreen';
 import editDrafts from './editDrafts';
+import ScheduledMessage from './ScheduledMessage';
 
 const Tab = createMaterialTopTabNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -51,6 +52,7 @@ function ChatsStackNavigator() {
       <ChatStack.Screen name="draftChatMessage" component={draftChatMessage} />
       <ChatStack.Screen name="draftListScreen" component={draftListScreen} />
       <ChatStack.Screen name="editDrafts" component={editDrafts} />
+      <ChatStack.Screen name="ScheduledMessage" component={ScheduledMessage} />
     </ChatStack.Navigator>
   );
 }
@@ -88,7 +90,7 @@ export default class MainNavigation extends Component {
             } else if (route.name === 'Profile') {
               iconName = 'account';
             } else if (route.name === 'Users') {
-              iconName = 'person-add';
+              iconName = 'account-plus';
             } else if (route.name === 'Blocked') {
               iconName = 'block-helper';
             }
@@ -102,7 +104,7 @@ export default class MainNavigation extends Component {
             backgroundColor: '#007bff',
           },
           labelStyle: {
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: 'bold',
           },
         }}

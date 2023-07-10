@@ -151,7 +151,7 @@ export default class MyProfile extends Component {
       dataToSend.last_name = this.state.lastname;
     }
     if (this.state.email !== this.state.userInfo.email) {
-      dataToSend.first_name = this.state.email;
+      dataToSend.email = this.state.email;
     }
 
     PatchUserData(await AsyncStorage.getItem("id"), dataToSend, () => {

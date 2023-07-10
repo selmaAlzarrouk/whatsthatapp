@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -11,7 +11,6 @@ import {
   deleteMessage,
   sendMessage,
 } from "../api/apiController";
-import { color } from "@rneui/base";
 
 const singleChatStyling = {
   container: {
@@ -104,11 +103,19 @@ export default class SingleChatScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.getData();
     });
-  }
+  
+  //This will get the chat messages every will need it for draft scheduling 
+ // this.interval = setInterval(() =>{
+ //   this.getData();
+//  },6000);
+ // console.log(" call each time :>");
+}
 
   componentWillUnmount() {
     this.unsubscribe();
-  }
+    clearInterval(this.interval);
+  } 
+
 
   async getData() {
     const chatID = await AsyncStorage.getItem("chatID");
