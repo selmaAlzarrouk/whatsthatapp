@@ -82,7 +82,7 @@ class SignIn extends Component {
         </Text>
         <Image
           style={{ width: 145, height: 145 }}
-          source={require('../assets/whatsThatLogo.png')}
+          source={require('../../Images/whatsThatLogo.png')}
         />
 
         <Input

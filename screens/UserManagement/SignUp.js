@@ -125,7 +125,7 @@ class SignUp extends Component {
           style={{
             width: 145, height: 145, alignSelf: 'center', marginTop: 30,
           }}
-          source={require('../assets/whatsThatLogo.png')}
+          source={require('../../Images/whatsThatLogo.png')}
         />
         <Text style={{
           textAlign: 'center', marginTop: 10, marginBottom: 20, fontSize: 24,
