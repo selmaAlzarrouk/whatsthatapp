@@ -74,6 +74,7 @@ class ScheduledMessage extends Component {
 
       // Find the draft by draftId
       const draftIndex = draftMessages.findIndex((draft) => draft.draftId === draftId);
+      // eslint-disable-next-line no-console
       console.log('draftId:', draftId);
       if (draftIndex === -1) {
         this.setState({ error: 'Draft not found.' });
