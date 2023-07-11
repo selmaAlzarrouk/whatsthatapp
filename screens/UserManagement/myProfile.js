@@ -14,7 +14,7 @@ import {
   getAccountPhoto,
   PatchUserData,
   userLogout,
-} from '../api/apiController';
+} from '../../api/apiController';
 
 const styles = StyleSheet.create({
   container: {

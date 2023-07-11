@@ -1,25 +1,28 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Icon, ListItem, ThemeProvider, Switch } from "react-native-elements";
+  FlatList,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  Icon, ListItem, ThemeProvider, Switch,
+} from 'react-native-elements';
 
 import {
   addUsertoChat,
   getContactLisData,
   getSingleChat,
   deleteUserinChat,
-} from "../api/apiController";
+} from '../../api/apiController';
 
 const styles = StyleSheet.create({
   contain: {
@@ -32,21 +35,21 @@ const styles = StyleSheet.create({
   },
   subheading: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 10,
   },
   actContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   icon: {
     marginRight: 5,
   },
   deleteTxt: {
-    color: "red",
+    color: 'red',
   },
   addText: {
-    color: "green",
+    color: 'green',
   },
 });
 
@@ -56,8 +59,8 @@ export default class ChatGroupManagement extends Component {
     this.state = {
       chatData: [],
       contactData: [],
-      error: "",
-      theme: "light",
+      error: '',
+      theme: 'light',
     };
   }
 
@@ -67,7 +70,7 @@ export default class ChatGroupManagement extends Component {
   }
 
   async getChatData() {
-    getSingleChat(await AsyncStorage.getItem("chatID"), (response) => {
+    getSingleChat(await AsyncStorage.getItem('chatID'), (response) => {
       this.setState({ chatData: response });
     });
   }
@@ -79,68 +82,68 @@ export default class ChatGroupManagement extends Component {
       },
       (err) => {
         this.setState({ error: err });
-      }
+      },
     );
   }
 
   addUser = async (userId) => {
     addUsertoChat(
-      await AsyncStorage.getItem("chatID"),
+      await AsyncStorage.getItem('chatID'),
       userId,
       () => {
         this.getChatData();
         this.getContactData();
       },
-      () => {}
+      () => {},
     );
   };
 
   deleteUser = async (userId) => {
     deleteUserinChat(
-      await AsyncStorage.getItem("chatID"),
+      await AsyncStorage.getItem('chatID'),
       userId,
       () => {
         this.getChatData();
         this.getContactData();
       },
-      () => {}
+      () => {},
     );
   };
 
   toggleTheme = () => {
     this.setState((prevState) => ({
-      theme: prevState.theme === "light" ? "dark" : "light",
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
     }));
   };
 
   render() {
     const { theme } = this.state;
-    const bgColour = theme === "dark" ? "#000000" : "#ffffff";
-    const textColour = theme === "dark" ? "#ffffff" : "#000000";
+    const bgColour = theme === 'dark' ? '#000000' : '#ffffff';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
 
     return (
-      <ThemeProvider useDark={theme === "dark"}>
+      <ThemeProvider useDark={theme === 'dark'}>
         <ScrollView>
           <View
             style={[styles.contain, { backgroundColor: bgColour }]}
-            accessible={true}
+            accessible
             accessibilityLabel="Chat Group Management"
           >
             <TouchableOpacity
               onPress={() => this.props.navigation.goBack(null)}
-              accessible={true}
+              accessible
               accessibilityLabel="Go Back"
             >
               <Ionicons
                 name="arrow-back"
                 size={24}
-                accessible={true}
+                accessible
                 accessibilityLabel="Back Icon"
               />
             </TouchableOpacity>
             <Text
               style={{ color: textColour }}
-              accessible={true}
+              accessible
               accessibilityLabel="Error Message"
             >
               {this.state.error}
@@ -148,7 +151,7 @@ export default class ChatGroupManagement extends Component {
             <View style={styles.section}>
               <Text
                 style={[styles.subheading, { color: textColour }]}
-                accessible={true}
+                accessible
                 accessibilityLabel="Members In Chats"
               >
                 Members In Chats
@@ -158,18 +161,21 @@ export default class ChatGroupManagement extends Component {
                 renderItem={({ item }) => (
                   <ListItem
                     bottomDivider
-                    accessible={true}
+                    accessible
                     accessibilityRole="listitem"
                   >
                     <ListItem.Content>
                       <ListItem.Title
                         style={{ color: textColour }}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={`${item.first_name} ${item.last_name}`}
-                      >{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                      >
+                        {`${item.first_name} ${item.last_name}`}
+
+                      </ListItem.Title>
                       <ListItem.Subtitle
                         style={{ color: textColour }}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={item.email}
                       >
                         {item.email}
@@ -178,7 +184,7 @@ export default class ChatGroupManagement extends Component {
                       <TouchableOpacity
                         onPress={() => this.deleteUser(item.user_id)}
                         style={styles.actContainer}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={`Delete Contact for ${item.first_name}`}
                       >
                         <Icon
@@ -195,15 +201,13 @@ export default class ChatGroupManagement extends Component {
                     <ListItem.Chevron />
                   </ListItem>
                 )}
-                keyExtractor={({ id }, index) =>
-                  id ? id.toString() : index.toString()
-                }
+                keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
               />
             </View>
             <View style={styles.section}>
               <Text
                 style={[styles.subheading, { color: textColour }]}
-                accessible={true}
+                accessible
                 accessibilityLabel="Friend List"
               >
                 Friend List
@@ -213,18 +217,21 @@ export default class ChatGroupManagement extends Component {
                 renderItem={({ item }) => (
                   <ListItem
                     bottomDivider
-                    accessible={true}
+                    accessible
                     accessibilityRole="listitem"
                   >
                     <ListItem.Content>
                       <ListItem.Title
                         style={{ color: textColour }}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={`${item.first_name} ${item.last_name}`}
-                      >{`${item.first_name} ${item.last_name}`}</ListItem.Title>
+                      >
+                        {`${item.first_name} ${item.last_name}`}
+
+                      </ListItem.Title>
                       <ListItem.Subtitle
                         style={{ color: textColour }}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={item.email}
                       >
                         {item.email}
@@ -233,7 +240,7 @@ export default class ChatGroupManagement extends Component {
                       <TouchableOpacity
                         onPress={() => this.addUser(item.user_id)}
                         style={styles.actContainer}
-                        accessible={true}
+                        accessible
                         accessibilityLabel={`Add Contact for ${item.first_name}`}
                       >
                         <Icon
@@ -250,16 +257,14 @@ export default class ChatGroupManagement extends Component {
                     <ListItem.Chevron />
                   </ListItem>
                 )}
-                keyExtractor={({ id }, index) =>
-                  id ? id.toString() : index.toString()
-                }
+                keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
               />
             </View>
           </View>
           <Switch
-            value={theme === "dark"}
+            value={theme === 'dark'}
             onValueChange={this.toggleTheme}
-            accessible={true}
+            accessible
             accessibilityLabel="Toggle Dark Mode"
           />
         </ScrollView>

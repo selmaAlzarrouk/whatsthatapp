@@ -8,7 +8,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Text, Input, Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userLogsin } from '../api/apiController';
+import { userLogsin } from '../../api/apiController';
 
 const validator = require('email-validator');
 

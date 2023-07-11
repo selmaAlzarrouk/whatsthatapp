@@ -1,26 +1,30 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-import React, { Component } from "react";
+import React, { Component } from 'react';
 // UI react native Elements :
-import { Icon, ListItem, ThemeProvider, Switch } from "react-native-elements";
-import { ScrollView, Text, TouchableOpacity } from "react-native";
-import { FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { blockContact, deleteContact } from "../api/apiController";
+import {
+  Icon, ListItem, ThemeProvider, Switch,
+} from 'react-native-elements';
+import {
+  ScrollView, Text, TouchableOpacity, FlatList,
+} from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { blockContact, deleteContact } from '../../api/apiController';
 
 export default class ContactsScreen extends Component {
   constructor(props) {
     super(props);
     /* */ this.state = {
       contactArr: [],
-      message: "",
-      error: "",
-      theme: "light",
+      message: '',
+      error: '',
+      theme: 'light',
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener("focus", async () => {
+    this.unsubscribe = this.props.navigation.addListener('focus', async () => {
       this.getData();
     });
   }
@@ -31,11 +35,11 @@ export default class ContactsScreen extends Component {
   }
 
   async getData() {
-    const token = await AsyncStorage.getItem("whatsthat_session_token");
-    return fetch("http://localhost:3333/api/1.0.0/contacts", {
-      method: "GET",
+    const token = await AsyncStorage.getItem('whatsthat_session_token');
+    return fetch('http://localhost:3333/api/1.0.0/contacts', {
+      method: 'GET',
       headers: {
-        "x-authorization": token,
+        'x-authorization': token,
       },
     })
       .then((response) => {
@@ -43,10 +47,10 @@ export default class ContactsScreen extends Component {
           return response.json();
         }
         if (response.status === 401) {
-          const err = "unauthorised";
+          const err = 'unauthorised';
           throw err;
         } else {
-          const e = "Server Error";
+          const e = 'Server Error';
           throw e;
         }
       })
@@ -61,7 +65,7 @@ export default class ContactsScreen extends Component {
   deleteContactHandler = (id) => {
     deleteContact(id, () => {
       this.getData();
-      this.setState({ message: "Contact has been deleted" });
+      this.setState({ message: 'Contact has been deleted' });
     });
   };
 
@@ -69,27 +73,27 @@ export default class ContactsScreen extends Component {
     blockContact(
       id,
       () => {
-        this.setState({ message: "Contact has been Blocked" });
+        this.setState({ message: 'Contact has been Blocked' });
         this.getData();
       },
       (error) => {
         this.setState({ message: error });
-      }
+      },
     );
   };
 
   toggleTheme = () => {
     this.setState((prevState) => ({
-      theme: prevState.theme === "light" ? "dark" : "light",
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
     }));
   };
 
   render() {
     const { theme } = this.state;
-    const bgColour = theme === "dark" ? "#000000" : "#ffffff";
-    const textColour = theme === "dark" ? "#ffffff" : "#000000";
+    const bgColour = theme === 'dark' ? '#000000' : '#ffffff';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
     return (
-      <ThemeProvider useDark={theme === "dark"}>
+      <ThemeProvider useDark={theme === 'dark'}>
         <ScrollView Style={[{ backgroundColor: bgColour }]}>
           <Text>My Contact List</Text>
           <Text style={[{ color: textColour }]}>{this.state.error}</Text>
@@ -109,19 +113,17 @@ export default class ContactsScreen extends Component {
                     onPress={() => this.blockContactHandler(item.user_id)}
                   >
                     <Icon name="lock" type="font-awesome" color="red" />
-                    <Text style={{ color: "red" }}>Block Contact</Text>
+                    <Text style={{ color: 'red' }}>Block Contact</Text>
                   </TouchableOpacity>
                 </ListItem.Content>
                 <ListItem.Chevron />
               </ListItem>
             )}
-            keyExtractor={({ id }, index) =>
-              id ? id.toString() : index.toString()
-            }
+            keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
           />
           <Text>{this.state.message}</Text>
 
-          <Switch value={theme === "dark"} onValueChange={this.toggleTheme} />
+          <Switch value={theme === 'dark'} onValueChange={this.toggleTheme} />
         </ScrollView>
       </ThemeProvider>
     );

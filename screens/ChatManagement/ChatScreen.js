@@ -11,7 +11,7 @@ import {
   View, Text, FlatList, Switch,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createChat } from '../api/apiController';
+import { createChat } from '../../api/apiController';
 
 export default class ChatScreen extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   ScrollView,
   View,
@@ -9,25 +9,25 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-} from "react-native";
+} from 'react-native';
 import {
   Button,
   ListItem,
   Icon,
   ThemeProvider,
   Switch,
-} from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = {
   paginationContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
   },
   paginationButton: {
     fontSize: 16,
-    color: "#007bff",
+    color: '#007bff',
   },
 };
 
@@ -35,17 +35,17 @@ export default class UsersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: "",
+      query: '',
       userList: [],
-      message: "",
+      message: '',
       user_id: 0,
       offset: 0,
-      theme: "light",
+      theme: 'light',
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener("focus", () => {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.getData();
     });
   }
@@ -59,13 +59,13 @@ export default class UsersScreen extends Component {
       const response = await fetch(
         `http://localhost:3333/api/1.0.0/search?q=${this.state.query}&limit=5&offset=${this.state.offset}`,
         {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "x-authorization": await AsyncStorage.getItem(
-              "whatsthat_session_token"
+            'x-authorization': await AsyncStorage.getItem(
+              'whatsthat_session_token',
             ),
           },
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -74,7 +74,7 @@ export default class UsersScreen extends Component {
           userList: responseJson,
         });
       } else {
-        const error = "Error fetching data";
+        const error = 'Error fetching data';
         throw error;
       }
     } catch (error) {
@@ -105,41 +105,47 @@ export default class UsersScreen extends Component {
   searchUsers = () => {
     this.getData(() => {
       if (this.state.userList.length === 0) {
-        this.setState({ message: "No users" });
+        this.setState({ message: 'No users' });
       } else {
-        this.setState({ message: "" });
+        this.setState({ message: '' });
       }
     });
   };
 
+  toggleTheme = () => {
+    this.setState((prevState) => ({
+      theme: prevState.theme === 'light' ? 'dark' : 'light',
+    }));
+  };
+
   async addContact() {
     try {
-      const token = await AsyncStorage.getItem("whatsthat_session_token");
+      const token = await AsyncStorage.getItem('whatsthat_session_token');
       const response = await fetch(
         `http://localhost:3333/api/1.0.0/user/${this.state.user_id}/contact`,
         {
-          method: "post",
+          method: 'post',
           headers: {
-            "x-authorization": token,
+            'x-authorization': token,
           },
-        }
+        },
       );
 
       if (response.status === 200) {
-        this.setState({ message: "Added to Contacts" });
+        this.setState({ message: 'Added to Contacts' });
         return;
       }
       if (response.status === 400) {
         const error = "You can't add yourself as a contact";
         throw error;
       } else if (response.status === 401) {
-        const err = "Unauthorized";
+        const err = 'Unauthorized';
         throw err;
       } else if (response.status === 404) {
-        const e = "Not Found";
+        const e = 'Not Found';
         throw e;
       } else if (response.status === 500) {
-        const error = "Server Error";
+        const error = 'Server Error';
         throw error;
       }
     } catch (error) {
@@ -147,25 +153,19 @@ export default class UsersScreen extends Component {
     }
   }
 
-  toggleTheme = () => {
-    this.setState((prevState) => ({
-      theme: prevState.theme === "light" ? "dark" : "light",
-    }));
-  };
-
   renderUserItem = ({ item }) => (
     <ListItem bottomDivider>
       <Icon name="person" />
       <ListItem.Content>
         <ListItem.Title>{`${item.given_name} ${item.family_name}`}</ListItem.Title>
-        <ListItem.Subtitle style={{ color: "#999999" }}>
+        <ListItem.Subtitle style={{ color: '#999999' }}>
           {item.email}
         </ListItem.Subtitle>
       </ListItem.Content>
       <Button
         title="Add to Contact"
         onPress={() => this.addingContactHandler(item.user_id)}
-        buttonStyle={{ backgroundColor: "#007bff" }}
+        buttonStyle={{ backgroundColor: '#007bff' }}
         titleStyle={{ fontSize: 14 }}
       />
     </ListItem>
@@ -173,11 +173,11 @@ export default class UsersScreen extends Component {
 
   render() {
     const { theme } = this.state;
-    const bgColour = theme === "dark" ? "#000000" : "#ffffff";
-    const textColour = theme === "dark" ? "#ffffff" : "#000000";
+    const bgColour = theme === 'dark' ? '#000000' : '#ffffff';
+    const textColour = theme === 'dark' ? '#ffffff' : '#000000';
 
     return (
-      <ThemeProvider useDark={theme === "dark"}>
+      <ThemeProvider useDark={theme === 'dark'}>
         <ScrollView
           contentContainerStyle={[
             styles.container,
@@ -196,9 +196,7 @@ export default class UsersScreen extends Component {
           <FlatList
             data={this.state.userList}
             renderItem={this.renderUserItem}
-            keyExtractor={({ id }, index) =>
-              id ? id.toString() : index.toString()
-            }
+            keyExtractor={({ id }, index) => (id ? id.toString() : index.toString())}
           />
 
           <View style={styles.paginationContainer}>
@@ -211,7 +209,7 @@ export default class UsersScreen extends Component {
             </TouchableOpacity>
           </View>
           <Text>{this.state.message}</Text>
-          <Switch value={theme === "dark"} onValueChange={this.toggleTheme} />
+          <Switch value={theme === 'dark'} onValueChange={this.toggleTheme} />
         </ScrollView>
       </ThemeProvider>
     );

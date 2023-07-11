@@ -2,9 +2,9 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 // import { StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MainNavigation from './screens/MainNavigation';
-import SignUp from './screens/SignUp';
-import SignIn from './screens/SignIn';
+import MainNavigation from './screens/Navigation/MainNavigation';
+import SignUp from './screens/UserManagement/SignUp';
+import SignIn from './screens/UserManagement/SignIn';
 
 const Stack = createNativeStackNavigator();
 function App() {

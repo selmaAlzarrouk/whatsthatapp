@@ -12,7 +12,7 @@ import { Button, Input } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import {
   getSingleChat, deleteMessage, sendMessage,
-} from '../api/apiController';
+} from '../../api/apiController';
 
 // Styles
 const singleChatStyling = {
