@@ -56,6 +56,15 @@ class draftChatMessage extends Component {
     this.saveDraftMessageHandler();
   };
 
+  /* It saves a draft message to AsyncStorage.
+  Then it checks if a selected time is available.
+  If not, it displays an error message.
+  If a selected time is available, it checks if the draft message is empty.
+  If not, it retrieves the existing draft messages from AsyncStorage, generates a new draft ID,
+  adds the new draft message to the list, and saves the updated list back to AsyncStorage.
+  It also displays a success message and navigates to the draft list screen.
+  If theres an error during the process, itll displays an error message.
+*/
   saveDraftMessageHandler = async () => {
     const {
       selectedTime, chatName, chatId, draftMsg,

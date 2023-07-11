@@ -17,7 +17,7 @@ import editChatName from '../ChatManagement/editChatName';
 import EditMessage from '../ChatManagement/EditMessage';
 import chatGroupManagement from '../ContactsManagement/chatGroupManagement';
 import photoScreen from '../UserManagement/photoScreen';
-import draftChatMessage from '../ChatManagement/draftMessage';
+import draftChatMessage from '../DraftManagement/draftMessage';
 import draftListScreen from '../DraftManagement/draftListScreen';
 import editDrafts from '../DraftManagement/editDrafts';
 import ScheduledMessage from '../DraftManagement/ScheduledMessage';
