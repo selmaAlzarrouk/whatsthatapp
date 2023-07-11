@@ -73,7 +73,7 @@ export default class MainNavigation extends Component {
     if (token) {
       this.props.navigation.navigate('MainNavigation');
     } else {
-      this.props.navigation.navigate('login');
+      this.props.navigation.navigate('SignIn');
     }
   };
 

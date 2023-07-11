@@ -341,15 +341,15 @@ export const userLogout = async (success, failure) => {
 
   })
   // handling the response
-    .then((response) => {
+    .then(async (response) => {
       if (response.status === 200) {
-        return response;
+        await AsyncStorage.removeItem('whatsthat_session_token');
+        await AsyncStorage.removeItem('id');
       } if (response.status === 401) {
-        const newError = 'Unauthorised';
-        throw newError;
+        await AsyncStorage.removeItem('whatsthat_session_token');
+        await AsyncStorage.removeItem('id');
       } else {
-        const newError = 'Server Error';
-        throw newError;
+        this.props.navigation.navigate('login');
       }
     })
     .then(() => {

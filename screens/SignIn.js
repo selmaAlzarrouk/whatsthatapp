@@ -25,15 +25,20 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
-    this.checkToken();
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkSignedIn();
+    });
   }
 
-  checkToken = async () => {
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  checkSignedIn = async () => {
     const token = await AsyncStorage.getItem('whatsthat_session_token');
-    if (token) {
+    if (token != null) {
+      // navi to
       this.props.navigation.navigate('MainNavigation');
-    } else {
-      this.props.navigation.navigate('login');
     }
   };
 

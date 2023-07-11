@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
@@ -170,14 +171,14 @@ export default class MyProfile extends Component {
   }
 
   async sessionLogout() {
-    userLogout(
-      () => {
+    userLogout()
+      .then(() => {
         this.props.navigation.navigate('SignIn');
-      },
-      (err) => {
-        this.setState({ message: err });
-      },
-    );
+      })
+      .catch((err) => {
+        this.props.navigation.navigate('SignIn');
+        console.log(err);
+      });
   }
 
   render() {
